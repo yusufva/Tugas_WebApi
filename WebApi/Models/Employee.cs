@@ -1,8 +1,7 @@
 ﻿namespace WebApi.Models
 {
-    public class Employee : DateChange
+    public class Employee : BaseEntity
     {
-        public Guid Guid { get; set; }
         public string Nik {  get; set; }
         public string FirstName { get; set; }
         public string? LastName { get; set; }
