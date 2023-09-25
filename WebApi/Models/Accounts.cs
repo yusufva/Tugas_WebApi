@@ -2,17 +2,17 @@
 
 namespace WebApi.Models
 {
-    [Table("tb_m_accounts")]
+    [Table("tb_m_accounts")] //penamaan tabel pada orm
     public class Accounts : BaseEntity
     {
-        [Column("password", TypeName = "nvarchar(max)")]
-        public string Password { get; set; }
-        [Column("otp", TypeName = "int")]
-        public int Otp {  get; set; }
-        [Column("is_used")]
-        public bool IsUsed { get; set; }
-        [Column("exoired_time", TypeName = "datetime2")]
-        public DateTime ExpiredTime { get; set; }
+        [Column("password", TypeName = "nvarchar(max)")] //penamaan column pada orm
+        public string Password { get; set; } //property pada model
+        [Column("otp", TypeName = "int")] //penamaan column pada orm
+        public int Otp {  get; set; } //property pada model
+        [Column("is_used")] //penamaan column pada orm
+        public bool IsUsed { get; set; } //property pada model
+        [Column("exoired_time", TypeName = "datetime2")] //penamaan column pada orm
+        public DateTime ExpiredTime { get; set; } //property pada model
 
     }
 }

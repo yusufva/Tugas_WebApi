@@ -2,12 +2,12 @@
 
 namespace WebApi.Models
 {
-    [Table("tb_m_account_roles")]
+    [Table("tb_m_account_roles")] //penamaan tabel pada orm
     public class AccountRole : BaseEntity
     {
-        [Column("account_guid")]
-        public Guid AccountGuid { get; set; }
-        [Column("role_guid")]
-        public Guid RoleGuid { get; set; }
+        [Column("account_guid")] //penamaan column pada orm
+        public Guid AccountGuid { get; set; } //property pada model
+        [Column("role_guid")] //penamaan column pada orm
+        public Guid RoleGuid { get; set; } //property pada model
     }
 }

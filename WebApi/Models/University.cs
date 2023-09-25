@@ -2,12 +2,12 @@
 
 namespace WebApi.Models
 {
-    [Table("tb_m_universities")]
+    [Table("tb_m_universities")] //penamaan tabel pada orm
     public class University : BaseEntity
     {
-        [Column("code", TypeName = "nvarchar(50)")]
-        public string Code { get; set; }
-        [Column("name", TypeName = "nvarchar(100)")]
-        public string Name { get; set; }
+        [Column("code", TypeName = "nvarchar(50)")] //penamaan column pada orm
+        public string Code { get; set; } //property pada model
+        [Column("name", TypeName = "nvarchar(100)")] //penamaan column pada orm
+        public string Name { get; set; } //property pada model
     }
 }

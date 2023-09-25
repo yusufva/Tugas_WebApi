@@ -5,11 +5,11 @@ namespace WebApi.Models
 {
     public abstract class BaseEntity
     {
-        [Key, Column("guid")]
-        public Guid Guid { get; set; }
-        [Column("created_date")]
-        public DateTime CreatedDate { get; set; }
-        [Column("modified_date")]
-        public DateTime ModifiedDate { get; set; }
+        [Key, Column("guid")] //penamaan column pada orm
+        public Guid Guid { get; set; } //property pada model
+        [Column("created_date")] //penamaan column pada orm
+        public DateTime CreatedDate { get; set; } //property pada model
+        [Column("modified_date")] //penamaan column pada orm
+        public DateTime ModifiedDate { get; set; } //property pada model
     }
 }
