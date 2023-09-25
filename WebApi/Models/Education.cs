@@ -12,7 +12,7 @@ namespace WebApi.Models
         public string Degree { get; set; } //property pada model
         [Column("gpa", TypeName = "decimal(6,2)")] //penamaan column pada orm
         public float Gpa { get; set; } //property pada model
-        [Column("university_guid", TypeName = "guid")] //penamaan column pada orm
+        [Column("university_guid")] //penamaan column pada orm
         public Guid UniversityGuid { get; set; } //property pada model
     }
 }
