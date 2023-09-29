@@ -10,7 +10,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<BookingManagementDbContext>(options => options.UseSqlServer(connectionString)); //menginstance db context
 
 // Add Repositories to the Conatainer
-builder.Services.AddScoped<IUniversityRepository, UniversityRepository>();
+builder.Services.AddScoped<IUniversityRepository, UniversityRepository>(); //menginstance University Repo
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

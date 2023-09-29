@@ -2,6 +2,7 @@
 
 namespace WebApi.Contracts
 {
+    //contract interface University
     public interface IUniversityRepository
     {
         IEnumerable<University> GetAll();

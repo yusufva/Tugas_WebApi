@@ -16,9 +16,10 @@ namespace WebApi.Controllers
             _universityRepository = universityRepository;
         }
 
+        //Logic untuk Get University
         [HttpGet]
         public IActionResult GetAll() {
-            var result = _universityRepository.GetAll();
+            var result = _universityRepository.GetAll(); //mengambil semua data University
             if (!result.Any())
             {
                 return NotFound("Data not found");
@@ -27,9 +28,10 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
+        //Logic untuk Get University/{guid}
         [HttpGet("{guid}")]
         public IActionResult GetByGuid(Guid guid) { 
-            var result = _universityRepository.GetByGuid(guid);
+            var result = _universityRepository.GetByGuid(guid); //mengambil data University By Guid
             if(result is null)
             {
                 return NotFound("Id not found");
@@ -38,10 +40,11 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
+        //Logic untuk Post University/
         [HttpPost]
         public IActionResult Insert(University university)
         {
-            var result = _universityRepository.Create(university);
+            var result = _universityRepository.Create(university); //melakukan Create University
             if(result is null)
             {
                 return BadRequest("Failed to Create Data");
@@ -50,10 +53,11 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
+        //Logic untuk PUT University
         [HttpPut]
         public IActionResult Update(University university)
         {
-            var result = _universityRepository.Update(university);
+            var result = _universityRepository.Update(university); //melakukan update University
             if(!result)
             {
                 return BadRequest("Failed to Update Data");
@@ -62,11 +66,12 @@ namespace WebApi.Controllers
             return Ok("Data has been Updated");
         }
 
+        //Logic untuk Delete University
         [HttpDelete("{guid}")]
         public IActionResult Delete(Guid guid)
         {
-            var university = _universityRepository.GetByGuid(guid);
-            var result = _universityRepository.Delete(university);
+            var university = _universityRepository.GetByGuid(guid); //mengambil university by GUID
+            var result = _universityRepository.Delete(university); //melakukan Delete University
             if (!result)
             {
                 return BadRequest("Id not found");
