@@ -14,5 +14,8 @@ namespace WebApi.Models
         [Column("exoired_time", TypeName = "datetime2")] //penamaan column pada orm
         public DateTime ExpiredTime { get; set; } //property pada model
 
+        //cardinality
+        public ICollection<AccountRole>? AccountRoles { get; set; }
+        public Employee? Employee { get; set; }
     }
 }

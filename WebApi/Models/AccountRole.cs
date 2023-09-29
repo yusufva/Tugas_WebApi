@@ -9,5 +9,9 @@ namespace WebApi.Models
         public Guid AccountGuid { get; set; } //property pada model
         [Column("role_guid")] //penamaan column pada orm
         public Guid RoleGuid { get; set; } //property pada model
+
+        //cardinality
+        public Role? Role { get; set; }
+        public Accounts? Accounts { get; set; }
     }
 }

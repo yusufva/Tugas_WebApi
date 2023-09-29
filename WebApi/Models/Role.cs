@@ -7,5 +7,8 @@ namespace WebApi.Models
     {
         [Column("name", TypeName = "nvarchar(100)")] //penamaan column pada orm
         public string Name { get; set; } //property pada model
+
+        //cardinality
+        public ICollection<AccountRole>? AccountRoles { get; set; }
     }
 }

@@ -18,5 +18,9 @@ namespace WebApi.Models
         public Guid RoomGuid { get; set; } //property pada model
         [Column("room_guid")] //penamaan column pada orm
         public Guid EmployeeGuid { get; set; } //property pada model
+
+        //cardinality
+        public Employee? Employee { get; set; }
+        public Room? Room { get; set; }
     }
 }

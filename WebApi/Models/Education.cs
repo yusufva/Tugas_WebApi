@@ -14,5 +14,9 @@ namespace WebApi.Models
         public float Gpa { get; set; } //property pada model
         [Column("university_guid")] //penamaan column pada orm
         public Guid UniversityGuid { get; set; } //property pada model
+
+        //cardinality
+        public University? University { get; set; }
+        public Employee? Employee { get; set; }
     }
 }

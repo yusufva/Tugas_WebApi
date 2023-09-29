@@ -11,5 +11,8 @@ namespace WebApi.Models
         public int Floor { get; set; } //property pada model
         [Column("capacity", TypeName = "int")] //penamaan column pada orm
         public int Capacity { get; set; } //property pada model
+
+        //cardinality
+        public ICollection<Booking>? Bookings { get; set; }
     }
 }

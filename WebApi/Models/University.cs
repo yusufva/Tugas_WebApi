@@ -9,5 +9,8 @@ namespace WebApi.Models
         public string Code { get; set; } //property pada model
         [Column("name", TypeName = "nvarchar(100)")] //penamaan column pada orm
         public string Name { get; set; } //property pada model
+
+        //cardinality
+        public ICollection<Education>? Educations { get; set; }
     }
 }

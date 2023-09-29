@@ -22,5 +22,10 @@ namespace WebApi.Models
         public string Email { get; set; } //property pada model
         [Column("phone_number", TypeName = "nvarchar(20)")] //penamaan column pada orm
         public string PhoneNumber { get; set; } //property pada model
+
+        //cardinality
+        public Accounts? Accounts { get; set; }
+        public ICollection<Booking>? Bookings { get; set; }
+        public Education? Education { get; set; }
     }
 }
