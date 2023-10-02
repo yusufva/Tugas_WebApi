@@ -16,7 +16,7 @@ namespace WebApi.Models
         public string Remarks { get; set; } //property pada model
         [Column("room_guid")] //penamaan column pada orm
         public Guid RoomGuid { get; set; } //property pada model
-        [Column("room_guid")] //penamaan column pada orm
+        [Column("employee_guid")] //penamaan column pada orm
         public Guid EmployeeGuid { get; set; } //property pada model
 
         //cardinality
