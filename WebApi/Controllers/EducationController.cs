@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Educations;
-using WebApi.DTOs.Roles;
-using WebApi.Models;
-using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {

@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.DTOs.Roles;
 using WebApi.DTOs.Rooms;
-using WebApi.Models;
+using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -61,6 +62,12 @@ namespace WebApi.Controllers
         [HttpPut]
         public IActionResult Update(RoomDto roomDto)
         {
+            var entity = _roomRepository.GetByGuid(roomDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id not Found");
+            }
+
             var result = _roomRepository.Update(roomDto); //melakukan update Room
             if (!result)
             {

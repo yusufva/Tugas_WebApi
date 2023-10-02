@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Universities;
-using WebApi.Models;
 
 namespace WebApi.Controllers
 {

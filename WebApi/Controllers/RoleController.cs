@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Roles;
-using WebApi.DTOs.Rooms;
-using WebApi.Models;
 
 namespace WebApi.Controllers
 {
