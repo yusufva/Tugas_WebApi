@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.DTOs.Universities;
 using WebApi.Models;
 
 namespace WebApi.Controllers
@@ -19,13 +20,15 @@ namespace WebApi.Controllers
         //Logic untuk Get University
         [HttpGet]
         public IActionResult GetAll() {
-            var result = _universityRepository.GetAll(); //mengambil semua data University
+            var result = _universityRepository.GetAll();
             if (!result.Any())
             {
-                return NotFound("Data not found");
+                return NotFound("Data Not Found");
             }
 
-            return Ok(result);
+            var data = result.Select(x => (UniversityDto)x);
+
+            return Ok(data);
         }
 
         //Logic untuk Get University/{guid}
@@ -37,27 +40,33 @@ namespace WebApi.Controllers
                 return NotFound("Id not found");
             }
 
-            return Ok(result);
+            return Ok((UniversityDto)result);
         }
 
         //Logic untuk Post University/
         [HttpPost]
-        public IActionResult Insert(University university)
+        public IActionResult Insert(CreateUniversityDto universityDto)
         {
-            var result = _universityRepository.Create(university); //melakukan Create University
+            var result = _universityRepository.Create(universityDto); //melakukan Create University
             if(result is null)
             {
                 return BadRequest("Failed to Create Data");
             }
 
-            return Ok(result);
+            return Ok((UniversityDto)result);
         }
 
         //Logic untuk PUT University
         [HttpPut]
-        public IActionResult Update(University university)
+        public IActionResult Update(UniversityDto universityDto)
         {
-            var result = _universityRepository.Update(university); //melakukan update University
+            var entity = _universityRepository.GetByGuid(universityDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id not Found");
+            }
+
+            var result = _universityRepository.Update(universityDto); //melakukan update University
             if(!result)
             {
                 return BadRequest("Failed to Update Data");
@@ -71,6 +80,11 @@ namespace WebApi.Controllers
         public IActionResult Delete(Guid guid)
         {
             var university = _universityRepository.GetByGuid(guid); //mengambil university by GUID
+            if (university is null)
+            {
+                return NotFound("Id not Found");
+            }
+
             var result = _universityRepository.Delete(university); //melakukan Delete University
             if (!result)
             {

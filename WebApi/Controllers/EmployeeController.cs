@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
-using WebApi.Models;
+using WebApi.DTOs.Employees;
 
 namespace WebApi.Controllers
 {
@@ -25,7 +25,9 @@ namespace WebApi.Controllers
                 return NotFound("Data not found");
             }
 
-            return Ok(result);
+            var data = result.Select(x => (EmployeesDto)x);
+
+            return Ok(data);
         }
 
         //Logic untuk Get Employee/{guid}
@@ -38,27 +40,33 @@ namespace WebApi.Controllers
                 return NotFound("Id not found");
             }
 
-            return Ok(result);
+            return Ok((EmployeesDto)result);
         }
 
         //Logic untuk Post Employee/
         [HttpPost]
-        public IActionResult Insert(Employee employee)
+        public IActionResult Insert(NewEmployeesDto newEmployeesDto)
         {
-            var result = _employeeRepository.Create(employee); //melakukan Create Employee
+            var result = _employeeRepository.Create(newEmployeesDto); //melakukan Create Employee
             if (result is null)
             {
                 return BadRequest("Failed to Create Data");
             }
 
-            return Ok(result);
+            return Ok((EmployeesDto)result);
         }
 
         //Logic untuk PUT Employee
         [HttpPut]
-        public IActionResult Update(Employee employee)
+        public IActionResult Update(EmployeesDto employeesDto)
         {
-            var result = _employeeRepository.Update(employee); //melakukan update Employee
+            var entity = _employeeRepository.GetByGuid(employeesDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id not Found");
+            }
+
+            var result = _employeeRepository.Update(employeesDto); //melakukan update Employee
             if (!result)
             {
                 return BadRequest("Failed to Update Data");
@@ -72,6 +80,11 @@ namespace WebApi.Controllers
         public IActionResult Delete(Guid guid)
         {
             var employee = _employeeRepository.GetByGuid(guid); //mengambil employee by GUID
+            if (employee is null)
+            {
+                return NotFound("Id not Found");
+            }
+
             var result = _employeeRepository.Delete(employee); //melakukan Delete Employee
             if (!result)
             {

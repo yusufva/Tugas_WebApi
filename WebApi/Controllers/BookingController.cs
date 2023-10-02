@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.DTOs.Bookings;
+using WebApi.DTOs.Roles;
 using WebApi.Models;
+using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -25,7 +28,9 @@ namespace WebApi.Controllers
                 return NotFound("Data not found");
             }
 
-            return Ok(result);
+            var data = result.Select(x => (BookingsDto)x);
+
+            return Ok(data);
         }
 
         //Logic untuk Get Booking/{guid}
@@ -38,27 +43,33 @@ namespace WebApi.Controllers
                 return NotFound("Id not found");
             }
 
-            return Ok(result);
+            return Ok((BookingsDto)result);
         }
 
         //Logic untuk Post Booking/
         [HttpPost]
-        public IActionResult Insert(Booking booking)
+        public IActionResult Insert(NewBookingsDto newBookingsDto)
         {
-            var result = _bookingRepository.Create(booking); //melakukan Create Booking
+            var result = _bookingRepository.Create(newBookingsDto); //melakukan Create Booking
             if (result is null)
             {
                 return BadRequest("Failed to Create Data");
             }
 
-            return Ok(result);
+            return Ok((BookingsDto)result);
         }
 
         //Logic untuk PUT Booking
         [HttpPut]
-        public IActionResult Update(Booking booking)
+        public IActionResult Update(BookingsDto bookingsDto)
         {
-            var result = _bookingRepository.Update(booking); //melakukan update Booking
+            var entity = _bookingRepository.GetByGuid(bookingsDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id not Found");
+            }
+
+            var result = _bookingRepository.Update(bookingsDto); //melakukan update Booking
             if (!result)
             {
                 return BadRequest("Failed to Update Data");
@@ -72,6 +83,11 @@ namespace WebApi.Controllers
         public IActionResult Delete(Guid guid)
         {
             var booking = _bookingRepository.GetByGuid(guid); //mengambil booking by GUID
+            if (booking is null)
+            {
+                return NotFound("Id not Found");
+            }
+
             var result = _bookingRepository.Delete(booking); //melakukan Delete Booking
             if (!result)
             {

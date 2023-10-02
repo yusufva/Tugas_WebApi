@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.DTOs.Rooms;
 using WebApi.Models;
 
 namespace WebApi.Controllers
@@ -25,7 +26,9 @@ namespace WebApi.Controllers
                 return NotFound("Data not found");
             }
 
-            return Ok(result);
+            var data = result.Select(x => (RoomDto)x);
+
+            return Ok(data);
         }
 
         //Logic untuk Get Room/{guid}
@@ -38,27 +41,27 @@ namespace WebApi.Controllers
                 return NotFound("Id not found");
             }
 
-            return Ok(result);
+            return Ok((RoomDto)result);
         }
 
         //Logic untuk Post Room/
         [HttpPost]
-        public IActionResult Insert(Room room)
+        public IActionResult Insert(NewRoomDto newRoomDto)
         {
-            var result = _roomRepository.Create(room); //melakukan Create Room
+            var result = _roomRepository.Create(newRoomDto); //melakukan Create Room
             if (result is null)
             {
                 return BadRequest("Failed to Create Data");
             }
 
-            return Ok(result);
+            return Ok((RoomDto)result);
         }
 
         //Logic untuk PUT Room
         [HttpPut]
-        public IActionResult Update(Room room)
+        public IActionResult Update(RoomDto roomDto)
         {
-            var result = _roomRepository.Update(room); //melakukan update Room
+            var result = _roomRepository.Update(roomDto); //melakukan update Room
             if (!result)
             {
                 return BadRequest("Failed to Update Data");
@@ -72,6 +75,11 @@ namespace WebApi.Controllers
         public IActionResult Delete(Guid guid)
         {
             var room = _roomRepository.GetByGuid(guid); //mengambil room by GUID
+            if (room is null)
+            {
+                return NotFound("Id not Found");
+            }
+
             var result = _roomRepository.Delete(room); //melakukan Delete Room
             if (!result)
             {

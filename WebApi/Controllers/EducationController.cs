@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.DTOs.Educations;
+using WebApi.DTOs.Roles;
 using WebApi.Models;
+using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -25,7 +28,9 @@ namespace WebApi.Controllers
                 return NotFound("Data not found");
             }
 
-            return Ok(result);
+            var data = result.Select(x=>(EducationsDto)x);
+
+            return Ok(data);
         }
 
         //Logic untuk Get Education/{guid}
@@ -38,27 +43,33 @@ namespace WebApi.Controllers
                 return NotFound("Id not found");
             }
 
-            return Ok(result);
+            return Ok((EducationsDto)result);
         }
 
         //Logic untuk Post Education/
         [HttpPost]
-        public IActionResult Insert(Education education)
+        public IActionResult Insert(NewEducationsDto newEducationsDto)
         {
-            var result = _educationRepository.Create(education); //melakukan Create Education
+            var result = _educationRepository.Create(newEducationsDto); //melakukan Create Education
             if (result is null)
             {
                 return BadRequest("Failed to Create Data");
             }
 
-            return Ok(result);
+            return Ok((EducationsDto) result);
         }
 
         //Logic untuk PUT Education
         [HttpPut]
-        public IActionResult Update(Education education)
+        public IActionResult Update(EducationsDto educationsDto)
         {
-            var result = _educationRepository.Update(education); //melakukan update Education
+            var entity = _educationRepository.GetByGuid(educationsDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id not Found");
+            }
+
+            var result = _educationRepository.Update(educationsDto); //melakukan update Education
             if (!result)
             {
                 return BadRequest("Failed to Update Data");
@@ -72,6 +83,11 @@ namespace WebApi.Controllers
         public IActionResult Delete(Guid guid)
         {
             var education = _educationRepository.GetByGuid(guid); //mengambil education by GUID
+            if (education is null)
+            {
+                return NotFound("Id not Found");
+            }
+
             var result = _educationRepository.Delete(education); //melakukan Delete Education
             if (!result)
             {

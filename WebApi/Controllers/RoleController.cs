@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.DTOs.Roles;
+using WebApi.DTOs.Rooms;
 using WebApi.Models;
 
 namespace WebApi.Controllers
@@ -25,7 +27,9 @@ namespace WebApi.Controllers
                 return NotFound("Data not found");
             }
 
-            return Ok(result);
+            var data = result.Select(x => (RoleDto)x);
+
+            return Ok(data);
         }
 
         //Logic untuk Get Role/{guid}
@@ -38,27 +42,33 @@ namespace WebApi.Controllers
                 return NotFound("Id not found");
             }
 
-            return Ok(result);
+            return Ok((RoleDto)result);
         }
 
         //Logic untuk Post Role/
         [HttpPost]
-        public IActionResult Insert(Role role)
+        public IActionResult Insert(NewRoleDto newRoleDto)
         {
-            var result = _roleRepository.Create(role); //melakukan Create Role
+            var result = _roleRepository.Create(newRoleDto); //melakukan Create Role
             if (result is null)
             {
                 return BadRequest("Failed to Create Data");
             }
 
-            return Ok(result);
+            return Ok((RoleDto)result);
         }
 
         //Logic untuk PUT Role
         [HttpPut]
-        public IActionResult Update(Role role)
+        public IActionResult Update(RoleDto roleDto)
         {
-            var result = _roleRepository.Update(role); //melakukan update Role
+            var entity = _roleRepository.GetByGuid(roleDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id not Found");
+            }
+
+            var result = _roleRepository.Update(roleDto); //melakukan update Role
             if (!result)
             {
                 return BadRequest("Failed to Update Data");
@@ -72,6 +82,11 @@ namespace WebApi.Controllers
         public IActionResult Delete(Guid guid)
         {
             var role = _roleRepository.GetByGuid(guid); //mengambil role by GUID
+            if (role is null)
+            {
+                return NotFound("Id not Found");
+            }
+
             var result = _roleRepository.Delete(role); //melakukan Delete Role
             if (!result)
             {

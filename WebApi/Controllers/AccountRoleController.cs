@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
-using WebApi.Models;
+using WebApi.DTOs.AccountRoles;
 
 namespace WebApi.Controllers
 {
@@ -25,7 +25,9 @@ namespace WebApi.Controllers
                 return NotFound("Data not found");
             }
 
-            return Ok(result);
+            var data = result.Select(x => (AccountRolesDto)x);
+
+            return Ok(data);
         }
 
         //Logic untuk Get AccountRole/{guid}
@@ -38,27 +40,33 @@ namespace WebApi.Controllers
                 return NotFound("Id not found");
             }
 
-            return Ok(result);
+            return Ok((AccountRolesDto)result);
         }
 
         //Logic untuk Post AccountRole/
         [HttpPost]
-        public IActionResult Insert(AccountRole accountRole)
+        public IActionResult Insert(NewAccountRolesDto newAccountRole)
         {
-            var result = _accountRoleRepository.Create(accountRole); //melakukan Create AccountRole
+            var result = _accountRoleRepository.Create(newAccountRole); //melakukan Create AccountRole
             if (result is null)
             {
                 return BadRequest("Failed to Create Data");
             }
 
-            return Ok(result);
+            return Ok((AccountRolesDto)result);
         }
 
         //Logic untuk PUT AccountRole
         [HttpPut]
-        public IActionResult Update(AccountRole accountRole)
+        public IActionResult Update(AccountRolesDto accountRolesDto)
         {
-            var result = _accountRoleRepository.Update(accountRole); //melakukan update AccountRole
+            var entity = _accountRoleRepository.GetByGuid(accountRolesDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id not Found");
+            }
+
+            var result = _accountRoleRepository.Update(accountRolesDto); //melakukan update AccountRole
             if (!result)
             {
                 return BadRequest("Failed to Update Data");
@@ -72,6 +80,11 @@ namespace WebApi.Controllers
         public IActionResult Delete(Guid guid)
         {
             var accountRole = _accountRoleRepository.GetByGuid(guid); //mengambil role by GUID
+            if (accountRole is null)
+            {
+                return NotFound("Id not Found");
+            }
+
             var result = _accountRoleRepository.Delete(accountRole); //melakukan Delete AccountRole
             if (!result)
             {

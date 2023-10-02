@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.DTOs.Account;
+using WebApi.DTOs.Roles;
+using WebApi.DTOs.Rooms;
 using WebApi.Models;
+using WebApi.Repositories;
 
 namespace WebApi.Controllers
 {
@@ -25,7 +29,9 @@ namespace WebApi.Controllers
                 return NotFound("Data not found");
             }
 
-            return Ok(result);
+            var data = result.Select(x => (AccountsDto)x);
+
+            return Ok(data);
         }
 
         //Logic untuk Get Accounts/{guid}
@@ -38,27 +44,33 @@ namespace WebApi.Controllers
                 return NotFound("Id not found");
             }
 
-            return Ok(result);
+            return Ok((AccountsDto)result);
         }
 
         //Logic untuk Post Accounts/
         [HttpPost]
-        public IActionResult Insert(Accounts accounts)
+        public IActionResult Insert(NewAccountsDto newAccountsDto)
         {
-            var result = _accountsRepository.Create(accounts); //melakukan Create Accounts
+            var result = _accountsRepository.Create(newAccountsDto); //melakukan Create Accounts
             if (result is null)
             {
                 return BadRequest("Failed to Create Data");
             }
 
-            return Ok(result);
+            return Ok((AccountsDto)result);
         }
 
         //Logic untuk PUT Accounts
         [HttpPut]
-        public IActionResult Update(Accounts accounts)
+        public IActionResult Update(AccountsDto accountsDto)
         {
-            var result = _accountsRepository.Update(accounts); //melakukan update Accounts
+            var entity = _accountsRepository.GetByGuid(accountsDto.Guid);
+            if (entity is null)
+            {
+                return NotFound("Id not Found");
+            }
+
+            var result = _accountsRepository.Update(accountsDto); //melakukan update Accounts
             if (!result)
             {
                 return BadRequest("Failed to Update Data");
@@ -72,6 +84,11 @@ namespace WebApi.Controllers
         public IActionResult Delete(Guid guid)
         {
             var accounts = _accountsRepository.GetByGuid(guid); //mengambil accounts by GUID
+            if (accounts is null)
+            {
+                return NotFound("Id not Found");
+            }
+
             var result = _accountsRepository.Delete(accounts); //melakukan Delete Accounts
             if (!result)
             {
