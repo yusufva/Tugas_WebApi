@@ -2,9 +2,8 @@
 
 namespace WebApi.DTOs.Account
 {
-    public class AccountsDto
+    public class AccountsDto : GeneralDto
     {
-        public Guid Guid { get; set; }
         public int Otp {  get; set; }
         public bool IsUsed { get; set; }
 
