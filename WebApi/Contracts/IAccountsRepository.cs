@@ -2,12 +2,7 @@
 
 namespace WebApi.Contracts
 {
-    public interface IAccountsRepository
+    public interface IAccountsRepository : IGeneralRepository<Accounts>
     {
-        IEnumerable<Accounts> GetAll();
-        Accounts? GetByGuid(Guid guid);
-        Accounts? Create(Accounts accounts);
-        bool Update(Accounts accounts);
-        bool Delete(Accounts accounts);
     }
 }
