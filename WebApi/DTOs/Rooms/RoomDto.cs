@@ -2,9 +2,8 @@
 
 namespace WebApi.DTOs.Rooms
 {
-    public class RoomDto
+    public class RoomDto : GeneralDto
     {
-        public Guid Guid { get; set; }
         public string Name { get; set; }
         public int Floor { get; set; }
         public int Capacity { get; set; }

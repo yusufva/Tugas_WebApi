@@ -3,9 +3,8 @@ using WebApi.Utilities.Enums;
 
 namespace WebApi.DTOs.Bookings
 {
-    public class BookingsDto
+    public class BookingsDto : GeneralDto
     {
-        public Guid Guid { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public StatusLevel Status { get; set; }

@@ -2,9 +2,8 @@
 
 namespace WebApi.DTOs.Universities
 {
-    public class UniversityDto
+    public class UniversityDto : GeneralDto
     {
-        public Guid Guid { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
 

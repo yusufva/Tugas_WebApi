@@ -2,9 +2,8 @@
 
 namespace WebApi.DTOs.Roles
 {
-    public class RoleDto
+    public class RoleDto : GeneralDto
     {
-        public Guid Guid { get; set; }
         public string Name;
 
         public static explicit operator RoleDto(Role role)

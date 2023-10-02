@@ -3,9 +3,8 @@ using WebApi.Utilities.Enums;
 
 namespace WebApi.DTOs.Employees
 {
-    public class EmployeesDto
+    public class EmployeesDto : GeneralDto
     {
-        public Guid Guid { get; set; }
         public string Nik { get; set; }
         public string FirstName { get; set; }
         public string? LastName { get; set; }
