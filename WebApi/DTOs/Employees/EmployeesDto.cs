@@ -5,16 +5,16 @@ namespace WebApi.DTOs.Employees
 {
     public class EmployeesDto : GeneralDto
     {
-        public string Nik { get; set; }
-        public string FirstName { get; set; }
-        public string? LastName { get; set; }
-        public DateTime BirthDate { get; set; }
-        public GenderLevel Gender { get; set; }
-        public DateTime HiringDate { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        public string Nik { get; set; } //deklarasi property
+        public string FirstName { get; set; } //deklarasi property
+        public string? LastName { get; set; } //deklarasi property
+        public DateTime BirthDate { get; set; } //deklarasi property
+        public GenderLevel Gender { get; set; } //deklarasi property
+        public DateTime HiringDate { get; set; } //deklarasi property
+        public string Email { get; set; } //deklarasi property
+        public string PhoneNumber { get; set; } //deklarasi property
 
-        public static explicit operator EmployeesDto(Employee employee)
+        public static explicit operator EmployeesDto(Employee employee) //implementasi explicit Operator
         {
             return new EmployeesDto
             {
@@ -30,7 +30,7 @@ namespace WebApi.DTOs.Employees
             };
         }
 
-        public static implicit operator Employee(EmployeesDto employeeDto)
+        public static implicit operator Employee(EmployeesDto employeeDto) //implementasi implicit Operator
         {
             return new Employee
             {

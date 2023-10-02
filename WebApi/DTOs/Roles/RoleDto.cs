@@ -4,9 +4,9 @@ namespace WebApi.DTOs.Roles
 {
     public class RoleDto : GeneralDto
     {
-        public string Name;
+        public string Name; //deklarasi property
 
-        public static explicit operator RoleDto(Role role)
+        public static explicit operator RoleDto(Role role) //implementasi explicit Operator
         {
             return new RoleDto
             {
@@ -15,7 +15,7 @@ namespace WebApi.DTOs.Roles
             };
         }
 
-        public static implicit operator Role(RoleDto roleDto)
+        public static implicit operator Role(RoleDto roleDto) //implementasi implicit Operator
         {
             return new Role
             {

@@ -4,10 +4,10 @@ namespace WebApi.DTOs.AccountRoles
 {
     public class NewAccountRolesDto
     {
-        public Guid AccountGuid { get; set; }
-        public Guid RoleGuid { get; set; }
+        public Guid AccountGuid { get; set; } //deklarasi property
+        public Guid RoleGuid { get; set; } //deklarasi property
 
-        public static implicit operator AccountRole(NewAccountRolesDto newAccountRolesDto)
+        public static implicit operator AccountRole(NewAccountRolesDto newAccountRolesDto) //implementasi implicit Operator
         {
             return new AccountRole
             {

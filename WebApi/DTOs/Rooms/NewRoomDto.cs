@@ -4,11 +4,11 @@ namespace WebApi.DTOs.Rooms
 {
     public class NewRoomDto
     {
-        public string Name { get; set; }
-        public int Floor { get; set; }
-        public int Capacity { get; set; }
+        public string Name { get; set; } //deklarasi property
+        public int Floor { get; set; } //deklarasi property
+        public int Capacity { get; set; } //deklarasi property
 
-        public static implicit operator Room(NewRoomDto newRoomDto)
+        public static implicit operator Room(NewRoomDto newRoomDto) //implementasi implicit Operator
         {
             return new Room
             {

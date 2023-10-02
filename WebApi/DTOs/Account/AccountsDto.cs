@@ -4,10 +4,10 @@ namespace WebApi.DTOs.Account
 {
     public class AccountsDto : GeneralDto
     {
-        public int Otp {  get; set; }
-        public bool IsUsed { get; set; }
+        public int Otp {  get; set; } //deklarasi property
+        public bool IsUsed { get; set; } //deklarasi property
 
-        public static explicit operator AccountsDto(Accounts accounts)
+        public static explicit operator AccountsDto(Accounts accounts) //implementasi explicit Operator
         {
             return new AccountsDto
             {
@@ -17,7 +17,7 @@ namespace WebApi.DTOs.Account
             };
         }
 
-        public static implicit operator Accounts(AccountsDto accountsDto)
+        public static implicit operator Accounts(AccountsDto accountsDto) //implementasi implicit Operator
         {
             return new Accounts
             {

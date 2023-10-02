@@ -4,10 +4,10 @@ namespace WebApi.DTOs.AccountRoles
 {
     public class AccountRolesDto : GeneralDto
     {
-        public Guid AccountGuid { get; set; }
-        public Guid RoleGuid { get; set; }
+        public Guid AccountGuid { get; set; } //deklarasi property
+        public Guid RoleGuid { get; set; } //deklarasi property
 
-        public static explicit operator AccountRolesDto(AccountRole accountRole)
+        public static explicit operator AccountRolesDto(AccountRole accountRole) //implementasi explicit Operator
         {
             return new AccountRolesDto 
             { 
@@ -17,7 +17,7 @@ namespace WebApi.DTOs.AccountRoles
             };
         }
 
-        public static implicit operator AccountRole(AccountRolesDto accountRolesDto)
+        public static implicit operator AccountRole(AccountRolesDto accountRolesDto) //implementasi implicit Operator
         {
             return new AccountRole
             {

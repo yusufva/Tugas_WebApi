@@ -4,12 +4,12 @@ namespace WebApi.DTOs.Educations
 {
     public class EducationsDto : GeneralDto
     {
-        public Guid UniversityGuid { get; set; }
-        public string Major {  get; set; }
-        public string Degree { get; set; }
-        public float Gpa { get; set; }
+        public Guid UniversityGuid { get; set; } //deklarasi property
+        public string Major {  get; set; } //deklarasi property
+        public string Degree { get; set; } //deklarasi property
+        public float Gpa { get; set; } //deklarasi property
 
-        public static explicit operator EducationsDto(Education education)
+        public static explicit operator EducationsDto(Education education) //implementasi explicit Operator
         {
             return new EducationsDto
             {
@@ -21,7 +21,7 @@ namespace WebApi.DTOs.Educations
             };
         }
 
-        public static implicit operator Education(EducationsDto educationDto)
+        public static implicit operator Education(EducationsDto educationDto) //implementasi implicit Operator
         {
             return new Education
             {
