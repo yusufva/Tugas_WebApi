@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Account;
+using WebApi.Models;
+using WebApi.Utilities.Handler;
 
 namespace WebApi.Controllers
 {
@@ -47,6 +49,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Insert(NewAccountsDto newAccountsDto)
         {
+            newAccountsDto.Password = HashHandler.HashPassword(newAccountsDto.Password);
             var result = _accountsRepository.Create(newAccountsDto); //melakukan Create Accounts
             if (result is null)
             {
@@ -66,7 +69,12 @@ namespace WebApi.Controllers
                 return NotFound("Id not Found");
             }
 
-            var result = _accountsRepository.Update(accountsDto); //melakukan update Accounts
+            Accounts toUpdate = accountsDto;
+            toUpdate.CreatedDate = entity.CreatedDate;
+            toUpdate.ModifiedDate = DateTime.Now;
+            toUpdate.Password = HashHandler.HashPassword(accountsDto.Password);
+
+            var result = _accountsRepository.Update(toUpdate); //melakukan update Accounts
             if (!result)
             {
                 return BadRequest("Failed to Update Data");
