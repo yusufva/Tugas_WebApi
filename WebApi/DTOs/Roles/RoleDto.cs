@@ -4,14 +4,14 @@ namespace WebApi.DTOs.Roles
 {
     public class RoleDto : GeneralDto
     {
-        public string Name; //deklarasi property
+        public string Name { get; set; } //deklarasi property
 
         public static explicit operator RoleDto(Role role) //implementasi explicit Operator
         {
             return new RoleDto
             {
                 Guid = role.Guid,
-                Name = role.Name,
+                Name = role.Name
             };
         }
 
@@ -21,7 +21,7 @@ namespace WebApi.DTOs.Roles
             {
                 Guid = roleDto.Guid,
                 Name = roleDto.Name,
-                ModifiedDate = DateTime.Now,
+                ModifiedDate = DateTime.Now
             };
         }
     }
