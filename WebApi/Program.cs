@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApi.Contracts;
 using WebApi.Data;
 using WebApi.Repositories;
+using WebApi.Utilities.Handler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddScoped<IBookingRepository, BookingRepository>(); //menginsta
 builder.Services.AddScoped<IAccountRoleRepository, AccountRoleRepository>(); //menginstance AccountRole Repo
 builder.Services.AddScoped<IAccountsRepository, AccountsRepository>(); //menginstance Accounts Repo
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); //menginstance Employee Repo
+builder.Services.AddScoped<GenerateHandler>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

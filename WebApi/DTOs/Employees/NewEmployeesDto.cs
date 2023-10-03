@@ -5,7 +5,6 @@ namespace WebApi.DTOs.Employees
 {
     public class NewEmployeesDto
     {
-        public string Nik { get; set; } //deklarasi property
         public string FirstName { get; set; } //deklarasi property
         public string? LastName { get; set; } //deklarasi property
         public DateTime BirthDate { get; set; } //deklarasi property
@@ -18,7 +17,6 @@ namespace WebApi.DTOs.Employees
         {
             return new Employee
             {
-                Nik = dto.Nik,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 BirthDate = dto.BirthDate,

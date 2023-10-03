@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Employees;
+using WebApi.Models;
+using WebApi.Utilities.Handler;
 
 namespace WebApi.Controllers
 {
@@ -9,10 +11,12 @@ namespace WebApi.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly GenerateHandler _generateHandler;
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository, GenerateHandler generateHandler)
         {
             _employeeRepository = employeeRepository;
+            _generateHandler = generateHandler;
         }
 
         //Logic untuk Get Employee
@@ -47,7 +51,11 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Insert(NewEmployeesDto newEmployeesDto)
         {
-            var result = _employeeRepository.Create(newEmployeesDto); //melakukan Create Employee
+            var nik = _generateHandler.GenerateNIK();
+            Employee toInsert = newEmployeesDto;
+            toInsert.Nik = nik;
+
+            var result = _employeeRepository.Create(toInsert); //melakukan Create Employee
             if (result is null)
             {
                 return BadRequest("Failed to Create Data");
