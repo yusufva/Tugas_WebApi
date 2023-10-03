@@ -51,7 +51,9 @@ namespace WebApi.Repositories
 
         public Accounts? GetByGuid(Guid guid)
         {
-            return _context.Set<Accounts>().Find(guid); // ORM melakukan get by guid
+            var entity = _context.Set<Accounts>().Find(guid);
+            _context.ChangeTracker.Clear();
+            return entity; // ORM melakukan get by guid
         }
 
         public bool Update(Accounts accounts)
