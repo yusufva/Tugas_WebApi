@@ -2,7 +2,7 @@
 
 namespace WebApi.DTOs.Account
 {
-    public class NewAccountsDto
+    public class NewAccountsDto : GeneralDto
     {
         public string Password { get; set; } //deklarasi property
 
@@ -10,6 +10,7 @@ namespace WebApi.DTOs.Account
         {
             return new Accounts
             {
+                Guid = newAccountsDto.Guid,
                 Password = newAccountsDto.Password,
                 IsUsed = true,
                 Otp = 0,
