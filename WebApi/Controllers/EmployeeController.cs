@@ -51,9 +51,9 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Insert(NewEmployeesDto newEmployeesDto)
         {
-            var nik = _generateHandler.GenerateNIK();
-            Employee toInsert = newEmployeesDto;
-            toInsert.Nik = nik;
+            var nik = _generateHandler.GenerateNIK(); //memanggil generateNIK
+            Employee toInsert = newEmployeesDto; //mendefinisikan object yang akan di create
+            toInsert.Nik = nik; //melakukan injeksi nik yang telah di generate ke object yang akan di create
 
             var result = _employeeRepository.Create(toInsert); //melakukan Create Employee
             if (result is null)
