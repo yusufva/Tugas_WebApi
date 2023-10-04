@@ -10,8 +10,8 @@ namespace WebApi.Utilities.Validations.Universities
 
         public CreateUniversityValidator()
         {
-            RuleFor(e => e.Name).NotEmpty().MaximumLength(100);
-            RuleFor(e => e.Code).NotEmpty().MaximumLength(50);
+            RuleFor(e => e.Name).NotEmpty().MaximumLength(100); //rule validator name
+            RuleFor(e => e.Code).NotEmpty().MaximumLength(50); //rule validator code
         }
     }
 }

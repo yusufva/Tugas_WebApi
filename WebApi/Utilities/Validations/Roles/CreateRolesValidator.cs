@@ -8,7 +8,7 @@ namespace WebApi.Utilities.Validations.Roles
         //public string Name { get; set; } //deklarasi property
 
         public CreateRolesValidator() {
-            RuleFor(e => e.Name).NotEmpty().MaximumLength(100);
+            RuleFor(e => e.Name).NotEmpty().MaximumLength(100); //rule validator name
         }
     }
 }

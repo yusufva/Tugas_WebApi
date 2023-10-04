@@ -7,8 +7,8 @@ namespace WebApi.Utilities.Validations.Roles
     {
         public UpdateRolesValidator()
         {
-            RuleFor(e=>e.Guid).NotEmpty();
-            RuleFor(e => e.Name).NotEmpty().MaximumLength(100);
+            RuleFor(e=>e.Guid).NotEmpty(); //rule validator guid
+            RuleFor(e => e.Name).NotEmpty().MaximumLength(100); //rule validator name
 
         }
     }

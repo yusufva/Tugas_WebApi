@@ -7,11 +7,11 @@ namespace WebApi.Utilities.Validations.Educations
     {
         public UpdateEducationsValidator()
         {
-            RuleFor(e => e.Guid).NotEmpty();
-            RuleFor(e => e.UniversityGuid).NotEmpty();
-            RuleFor(e => e.Major).NotEmpty().MaximumLength(100);
-            RuleFor(e => e.Degree).NotEmpty().MaximumLength(100);
-            RuleFor(e => e.Gpa).NotEmpty();
+            RuleFor(e => e.Guid).NotEmpty(); //rule validator guid
+            RuleFor(e => e.UniversityGuid).NotEmpty(); //rule validator university guid
+            RuleFor(e => e.Major).NotEmpty().MaximumLength(100); //rule validator major
+            RuleFor(e => e.Degree).NotEmpty().MaximumLength(100); //rule validator degree
+            RuleFor(e => e.Gpa).NotEmpty(); //rule validator gpa
         }
     }
 }

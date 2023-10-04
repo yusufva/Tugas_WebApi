@@ -10,9 +10,9 @@ namespace WebApi.Utilities.Validations.Rooms
         //public int Capacity { get; set; } //deklarasi property
 
         public CreateRoomsValidator() {
-            RuleFor(e => e.Name).NotEmpty().MaximumLength(100);
-            RuleFor(e=>e.Floor).NotEmpty();
-            RuleFor(e=>e.Capacity).NotEmpty();
+            RuleFor(e => e.Name).NotEmpty().MaximumLength(100); //rule validator name
+            RuleFor(e=>e.Floor).NotEmpty(); //rule validator floor
+            RuleFor(e=>e.Capacity).NotEmpty(); //rule validator capacity
         }
     }
 }

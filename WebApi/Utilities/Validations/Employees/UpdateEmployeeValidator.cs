@@ -6,23 +6,23 @@ namespace WebApi.Utilities.Validations.Employees
     public class UpdateEmployeeValidator : AbstractValidator<EmployeesDto>
     {
         public UpdateEmployeeValidator() {
-            RuleFor(e => e.Guid).NotEmpty();
-            RuleFor(e => e.FirstName).NotEmpty();
-            RuleFor(e => e.BirthDate)
+            RuleFor(e => e.Guid).NotEmpty(); //rule validator guid
+            RuleFor(e => e.FirstName).NotEmpty(); //rule validator first name
+            RuleFor(e => e.LastName).MaximumLength(100); //rule validator last name
+            RuleFor(e => e.BirthDate) //rule validator birth date
                 .NotEmpty()
                 .LessThanOrEqualTo(DateTime.Now.AddYears(-18)); //18 y.o
-            RuleFor(e => e.Gender)
+            RuleFor(e => e.Gender) //rule validator gender
                 .NotEmpty()
                 .IsInEnum();
-            RuleFor(e => e.HiringDate)
+            RuleFor(e => e.HiringDate) //rule validator hiring date
                 .NotEmpty();
-            RuleFor(e => e.Email)
+            RuleFor(e => e.Email) //rule validator email
                 .NotEmpty()
                 .EmailAddress();
-            RuleFor(e => e.PhoneNumber)
+            RuleFor(e => e.PhoneNumber) //rule validator phone number
                 .NotEmpty()
-                .MinimumLength(10)
-                .MaximumLength(20);
+                .Length(10,20);
         }
     }
 }

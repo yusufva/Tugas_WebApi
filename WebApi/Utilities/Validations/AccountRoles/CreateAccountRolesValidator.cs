@@ -6,8 +6,8 @@ namespace WebApi.Utilities.Validations.AccountRoles
     public class CreateAccountRolesValidator : AbstractValidator<NewAccountRolesDto>
     {
         public CreateAccountRolesValidator() {
-            RuleFor(e => e.AccountGuid).NotEmpty();
-            RuleFor(e => e.RoleGuid).NotEmpty();
+            RuleFor(e => e.AccountGuid).NotEmpty(); //rule validator account guid
+            RuleFor(e => e.RoleGuid).NotEmpty(); //rule validator role guid
         }
     }
 }

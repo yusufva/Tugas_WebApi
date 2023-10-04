@@ -7,9 +7,9 @@ namespace WebApi.Utilities.Validations.Universities
     {
         public UpdateUniversityValidator()
         {
-            RuleFor(e => e.Guid).NotEmpty();
-            RuleFor(e => e.Name).NotEmpty();
-            RuleFor(e => e.Code).NotEmpty();
+            RuleFor(e => e.Guid).NotEmpty(); //rule validator guid
+            RuleFor(e => e.Name).NotEmpty(); //rule validator name
+            RuleFor(e => e.Code).NotEmpty(); //rule validator code
         }
     }
 }
