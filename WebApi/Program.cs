@@ -1,8 +1,14 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using WebApi.Contracts;
 using WebApi.Data;
+using WebApi.DTOs.Employees;
 using WebApi.Repositories;
 using WebApi.Utilities.Handler;
+using WebApi.Utilities.Validations.Employees;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +27,23 @@ builder.Services.AddScoped<IAccountsRepository, AccountsRepository>(); //mengins
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); //menginstance Employee Repo
 builder.Services.AddScoped<GenerateHandler>(); //menginstance Generate Handler
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errors = context.ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(v => v.ErrorMessage);
+
+            return new BadRequestObjectResult(new ResponseValidatorHandler(errors));
+        };
+    });
+
+//Add Fluent validator
+builder.Services.AddFluentValidationAutoValidation()
+    .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

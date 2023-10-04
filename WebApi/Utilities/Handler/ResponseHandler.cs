@@ -82,4 +82,20 @@ namespace WebApi.Utilities.Handler
             Error = error;
         }
     }
+
+    public class ResponseValidatorHandler
+    {
+        public int Code { get; set; }
+        public string Status { get; set; }
+        public string Message { get; set; }
+        public object Error { get; set; }
+
+        public ResponseValidatorHandler(object error)
+        {
+            Code = StatusCodes.Status400BadRequest;
+            Status = HttpStatusCode.BadRequest.ToString();
+            Message = "Validations Error";
+            Error = error;
+        }
+    }
 }
