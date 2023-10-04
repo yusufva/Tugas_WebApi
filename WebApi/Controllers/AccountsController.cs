@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Account;
-using WebApi.DTOs.Employees;
 using WebApi.Models;
 using WebApi.Utilities.Handler;
 
@@ -110,7 +109,7 @@ namespace WebApi.Controllers
 
                 _accountsRepository.Delete(accounts); //melakukan Delete Accounts
 
-                return Ok(new ResponseOkHandler<EmployeesDto>("Data has been Deleted"));
+                return Ok(new ResponseOkHandler<AccountsDto>("Data has been Deleted"));
 
             }
             catch (ExceptionHandler ex)

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Bookings;
-using WebApi.DTOs.Employees;
 using WebApi.Utilities.Handler;
 
 namespace WebApi.Controllers
@@ -100,7 +99,7 @@ namespace WebApi.Controllers
 
                 _bookingRepository.Delete(booking); //melakukan Delete Booking
 
-                return Ok(new ResponseOkHandler<EmployeesDto>("Data has been Deleted"));
+                return Ok(new ResponseOkHandler<BookingsDto>("Data has been Deleted"));
 
             }
             catch (ExceptionHandler ex)
