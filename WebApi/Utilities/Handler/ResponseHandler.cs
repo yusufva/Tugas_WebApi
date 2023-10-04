@@ -3,7 +3,7 @@
 namespace WebApi.Utilities.Handler
 {
     //Handler Response OK
-    public class ResponseOkHandler<Tentity>
+    public class ResponseOkHandler<Tentity> where Tentity : class
     {
         public int Code { get; set; }
         public string Status { get; set; }
@@ -13,7 +13,7 @@ namespace WebApi.Utilities.Handler
         public ResponseOkHandler(Tentity? data, string message)
         {
             Code = StatusCodes.Status200OK;
-            Status = HttpStatusCode.Created.ToString();
+            Status = HttpStatusCode.OK.ToString();
             Message = message;
             Data = data;
         }
@@ -21,7 +21,7 @@ namespace WebApi.Utilities.Handler
         public ResponseOkHandler(string message)
         {
             Code = StatusCodes.Status200OK;
-            Status = HttpStatusCode.Created.ToString();
+            Status = HttpStatusCode.OK.ToString();
             Message = message;
         }
     }
