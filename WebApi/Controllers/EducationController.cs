@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Educations;
+using WebApi.DTOs.Employees;
+using WebApi.Utilities.Handler;
 
 namespace WebApi.Controllers
 {
@@ -22,12 +24,12 @@ namespace WebApi.Controllers
             var result = _educationRepository.GetAll(); //mengambil semua data Education
             if (!result.Any())
             {
-                return NotFound("Data not found");
+                return NotFound(new ResponseNotFoundHandler("Data not found"));
             }
 
             var data = result.Select(x=>(EducationsDto)x);
 
-            return Ok(data);
+            return Ok(new ResponseOkHandler<IEnumerable<EducationsDto>>(data, "Data retrieve Successfully"));
         }
 
         //Logic untuk Get Education/{guid}
@@ -37,61 +39,73 @@ namespace WebApi.Controllers
             var result = _educationRepository.GetByGuid(guid); //mengambil data Education By Guid
             if (result is null)
             {
-                return NotFound("Id not found");
+                return NotFound(new ResponseNotFoundHandler("Id not found"));
             }
 
-            return Ok((EducationsDto)result);
+            return Ok(new ResponseOkHandler<EducationsDto>((EducationsDto)result, "Data retrieve Successfully"));
         }
 
         //Logic untuk Post Education/
         [HttpPost]
         public IActionResult Insert(NewEducationsDto newEducationsDto)
         {
-            var result = _educationRepository.Create(newEducationsDto); //melakukan Create Education
-            if (result is null)
+            try
             {
-                return BadRequest("Failed to Create Data");
-            }
+                var result = _educationRepository.Create(newEducationsDto); //melakukan Create Education
 
-            return Ok((EducationsDto) result);
+                return Ok(new ResponseOkHandler<EducationsDto>((EducationsDto)result, "Insert Success"));
+
+            }
+            catch (ExceptionHandler ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("failed to Create Data", ex.Message)); //error pada repository
+            }
         }
 
         //Logic untuk PUT Education
         [HttpPut]
         public IActionResult Update(EducationsDto educationsDto)
         {
-            var entity = _educationRepository.GetByGuid(educationsDto.Guid);
-            if (entity is null)
+            try
             {
-                return NotFound("Id not Found");
-            }
+                var entity = _educationRepository.GetByGuid(educationsDto.Guid);
+                if (entity is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Id not Found"));
+                }
 
-            var result = _educationRepository.Update(educationsDto); //melakukan update Education
-            if (!result)
+                _educationRepository.Update(educationsDto); //melakukan update Education
+
+                return Ok(new ResponseOkHandler<EducationsDto>("Data has been Updated"));
+
+            }
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Failed to Update Data");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Update Data", ex.Message)); //error pada repository
             }
-
-            return Ok("Data has been Updated");
         }
 
         //Logic untuk Delete Education
         [HttpDelete("{guid}")]
         public IActionResult Delete(Guid guid)
         {
-            var education = _educationRepository.GetByGuid(guid); //mengambil education by GUID
-            if (education is null)
+            try
             {
-                return NotFound("Id not Found");
-            }
+                var education = _educationRepository.GetByGuid(guid); //mengambil education by GUID
+                if (education is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Id not Found"));
+                }
 
-            var result = _educationRepository.Delete(education); //melakukan Delete Education
-            if (!result)
+                _educationRepository.Delete(education); //melakukan Delete Education
+
+                return Ok(new ResponseOkHandler<EducationsDto>("Data has been Deleted"));
+
+            }
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Id not found");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Delete Data", ex.Message)); //error pada repository
             }
-
-            return Ok("Education has been deleted");
         }
     }
 }

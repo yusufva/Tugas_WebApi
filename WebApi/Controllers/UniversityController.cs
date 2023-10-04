@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.DTOs.Employees;
 using WebApi.DTOs.Universities;
+using WebApi.Utilities.Handler;
 
 namespace WebApi.Controllers
 {
@@ -22,12 +24,12 @@ namespace WebApi.Controllers
             var result = _universityRepository.GetAll();
             if (!result.Any())
             {
-                return NotFound("Data Not Found");
+                return NotFound(new ResponseNotFoundHandler("Data not found"));
             }
 
             var data = result.Select(x => (UniversityDto)x);
 
-            return Ok(data);
+            return Ok(new ResponseOkHandler<IEnumerable<UniversityDto>>(data, "Data retrieve Successfully"));
         }
 
         //Logic untuk Get University/{guid}
@@ -36,61 +38,76 @@ namespace WebApi.Controllers
             var result = _universityRepository.GetByGuid(guid); //mengambil data University By Guid
             if(result is null)
             {
-                return NotFound("Id not found");
+                return NotFound(new ResponseNotFoundHandler("Id not found"));
             }
 
-            return Ok((UniversityDto)result);
+            return Ok(new ResponseOkHandler<UniversityDto>((UniversityDto)result, "Data retrieve Successfully"));
         }
 
         //Logic untuk Post University/
         [HttpPost]
         public IActionResult Insert(CreateUniversityDto universityDto)
         {
-            var result = _universityRepository.Create(universityDto); //melakukan Create University
-            if(result is null)
+            try
             {
-                return BadRequest("Failed to Create Data");
-            }
+                var result = _universityRepository.Create(universityDto); //melakukan Create University
+                if(result is null)
+                {
+                    return BadRequest("Failed to Create Data");
+                }
 
-            return Ok((UniversityDto)result);
+                return Ok(new ResponseOkHandler<UniversityDto>((UniversityDto)result, "Insert Success"));
+
+            }
+            catch (ExceptionHandler ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("failed to Create Data", ex.Message)); //error pada repository
+            }
         }
 
         //Logic untuk PUT University
         [HttpPut]
         public IActionResult Update(UniversityDto universityDto)
         {
-            var entity = _universityRepository.GetByGuid(universityDto.Guid);
-            if (entity is null)
+            try
             {
-                return NotFound("Id not Found");
-            }
+                var entity = _universityRepository.GetByGuid(universityDto.Guid);
+                if (entity is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Id not found"));
+                }
 
-            var result = _universityRepository.Update(universityDto); //melakukan update University
-            if(!result)
+                _universityRepository.Update(universityDto); //melakukan update University
+
+                return Ok(new ResponseOkHandler<UniversityDto>("Data has been Updated"));
+
+            }
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Failed to Update Data");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Update Data", ex.Message)); //error pada repository
             }
-
-            return Ok("Data has been Updated");
         }
 
         //Logic untuk Delete University
         [HttpDelete("{guid}")]
         public IActionResult Delete(Guid guid)
         {
-            var university = _universityRepository.GetByGuid(guid); //mengambil university by GUID
-            if (university is null)
+            try
             {
-                return NotFound("Id not Found");
-            }
+                var university = _universityRepository.GetByGuid(guid); //mengambil university by GUID
+                if (university is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Id not found"));
+                }
 
-            var result = _universityRepository.Delete(university); //melakukan Delete University
-            if (!result)
+                _universityRepository.Delete(university); //melakukan Delete University
+                return Ok(new ResponseOkHandler<UniversityDto>("Data has been Deleted"));
+
+            }
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Id not found");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Delete Data", ex.Message)); //error pada repository
             }
-
-            return Ok("University has been deleted");
         }
     }
 }

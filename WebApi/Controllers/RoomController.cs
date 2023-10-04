@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.DTOs.Employees;
 using WebApi.DTOs.Roles;
 using WebApi.DTOs.Rooms;
 using WebApi.Repositories;
+using WebApi.Utilities.Handler;
 
 namespace WebApi.Controllers
 {
@@ -24,12 +26,12 @@ namespace WebApi.Controllers
             var result = _roomRepository.GetAll(); //mengambil semua data Room
             if (!result.Any())
             {
-                return NotFound("Data not found");
+                return NotFound(new ResponseNotFoundHandler("Data not found"));
             }
 
             var data = result.Select(x => (RoomDto)x);
 
-            return Ok(data);
+            return Ok(new ResponseOkHandler<IEnumerable<RoomDto>>(data, "Data retrieve Successfully"));
         }
 
         //Logic untuk Get Room/{guid}
@@ -39,61 +41,72 @@ namespace WebApi.Controllers
             var result = _roomRepository.GetByGuid(guid); //mengambil data Room By Guid
             if (result is null)
             {
-                return NotFound("Id not found");
+                return NotFound(new ResponseNotFoundHandler("Id not found"));
             }
 
-            return Ok((RoomDto)result);
+            return Ok(new ResponseOkHandler<RoomDto>((RoomDto)result, "Data retrieve Successfully"));
         }
 
         //Logic untuk Post Room/
         [HttpPost]
         public IActionResult Insert(NewRoomDto newRoomDto)
         {
-            var result = _roomRepository.Create(newRoomDto); //melakukan Create Room
-            if (result is null)
+            try
             {
-                return BadRequest("Failed to Create Data");
-            }
+                var result = _roomRepository.Create(newRoomDto); //melakukan Create Room
 
-            return Ok((RoomDto)result);
+                return Ok(new ResponseOkHandler<RoomDto>((RoomDto)result, "Insert Success"));
+            }
+            catch (ExceptionHandler ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("failed to Create Data", ex.Message)); //error pada repository
+            }
         }
 
         //Logic untuk PUT Room
         [HttpPut]
         public IActionResult Update(RoomDto roomDto)
         {
-            var entity = _roomRepository.GetByGuid(roomDto.Guid);
-            if (entity is null)
+            try
             {
-                return NotFound("Id not Found");
-            }
+                var entity = _roomRepository.GetByGuid(roomDto.Guid);
+                if (entity is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Id not Found"));
+                }
 
-            var result = _roomRepository.Update(roomDto); //melakukan update Room
-            if (!result)
+                _roomRepository.Update(roomDto); //melakukan update Room
+
+                return Ok(new ResponseOkHandler<RoomDto>("Data has been Updated"));
+
+            }
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Failed to Update Data");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Update Data", ex.Message)); //error pada repository
             }
-
-            return Ok("Data has been Updated");
         }
 
         //Logic untuk Delete Room
         [HttpDelete("{guid}")]
         public IActionResult Delete(Guid guid)
         {
-            var room = _roomRepository.GetByGuid(guid); //mengambil room by GUID
-            if (room is null)
+            try
             {
-                return NotFound("Id not Found");
-            }
+                var room = _roomRepository.GetByGuid(guid); //mengambil room by GUID
+                if (room is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Id not Found"));
+                }
 
-            var result = _roomRepository.Delete(room); //melakukan Delete Room
-            if (!result)
+                _roomRepository.Delete(room); //melakukan Delete Room
+
+                return Ok(new ResponseOkHandler<RoomDto>("Data has been Deleted"));
+
+            }
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Id not found");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Delete Data", ex.Message)); //error pada repository
             }
-
-            return Ok("Room has been deleted");
         }
     }
 }

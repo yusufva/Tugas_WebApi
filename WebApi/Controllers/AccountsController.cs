@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Account;
+using WebApi.DTOs.Employees;
 using WebApi.Models;
 using WebApi.Utilities.Handler;
 
@@ -24,12 +25,12 @@ namespace WebApi.Controllers
             var result = _accountsRepository.GetAll(); //mengambil semua data Accounts
             if (!result.Any())
             {
-                return NotFound("Data not found");
+                return NotFound(new ResponseNotFoundHandler("Data not found"));
             }
 
             var data = result.Select(x => (AccountsDto)x);
 
-            return Ok(data);
+            return Ok(new ResponseOkHandler<IEnumerable<AccountsDto>>(data, "Data retrieve Successfully"));
         }
 
         //Logic untuk Get Accounts/{guid}
@@ -39,67 +40,83 @@ namespace WebApi.Controllers
             var result = _accountsRepository.GetByGuid(guid); //mengambil data Accounts By Guid
             if (result is null)
             {
-                return NotFound("Id not found");
+                return NotFound(new ResponseNotFoundHandler("Data not found"));
             }
 
-            return Ok((AccountsDto)result);
+            return Ok(new ResponseOkHandler<AccountsDto>((AccountsDto)result, "Data retrieve Successfully"));
         }
 
         //Logic untuk Post Accounts/
         [HttpPost]
         public IActionResult Insert(NewAccountsDto newAccountsDto)
         {
-            newAccountsDto.Password = HashHandler.HashPassword(newAccountsDto.Password);
-            var result = _accountsRepository.Create(newAccountsDto); //melakukan Create Accounts
-            if (result is null)
+            try
             {
-                return BadRequest("Failed to Create Data");
-            }
+                newAccountsDto.Password = HashHandler.HashPassword(newAccountsDto.Password);
+                var result = _accountsRepository.Create(newAccountsDto); //melakukan Create Accounts
+                if (result is null)
+                {
+                    return BadRequest("Failed to Create Data");
+                }
 
-            return Ok((AccountsDto)result);
+                return Ok(new ResponseOkHandler<AccountsDto>((AccountsDto)result, "Insert Success"));
+
+            }
+            catch (ExceptionHandler ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("failed to Create Data", ex.Message)); //error pada repository
+            }
         }
 
         //Logic untuk PUT Accounts
         [HttpPut]
         public IActionResult Update(AccountsDto accountsDto)
         {
-            var entity = _accountsRepository.GetByGuid(accountsDto.Guid);
-            if (entity is null)
+            try
             {
-                return NotFound("Id not Found");
+                var entity = _accountsRepository.GetByGuid(accountsDto.Guid);
+                if (entity is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Data not found"));
+                }
+
+                Accounts toUpdate = accountsDto;
+                toUpdate.CreatedDate = entity.CreatedDate;
+                toUpdate.ModifiedDate = DateTime.Now;
+                toUpdate.Password = HashHandler.HashPassword(accountsDto.Password);
+
+                _accountsRepository.Update(toUpdate); //melakukan update Accounts
+
+                return Ok(new ResponseOkHandler<AccountsDto>("Data has been Updated"));
+
             }
-
-            Accounts toUpdate = accountsDto;
-            toUpdate.CreatedDate = entity.CreatedDate;
-            toUpdate.ModifiedDate = DateTime.Now;
-            toUpdate.Password = HashHandler.HashPassword(accountsDto.Password);
-
-            var result = _accountsRepository.Update(toUpdate); //melakukan update Accounts
-            if (!result)
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Failed to Update Data");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Update Data", ex.Message)); //error pada repository
             }
-
-            return Ok("Data has been Updated");
         }
 
         //Logic untuk Delete Accounts
         [HttpDelete("{guid}")]
         public IActionResult Delete(Guid guid)
         {
-            var accounts = _accountsRepository.GetByGuid(guid); //mengambil accounts by GUID
-            if (accounts is null)
+            try
             {
-                return NotFound("Id not Found");
-            }
+                var accounts = _accountsRepository.GetByGuid(guid); //mengambil accounts by GUID
+                if (accounts is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Data not found"));
+                }
 
-            var result = _accountsRepository.Delete(accounts); //melakukan Delete Accounts
-            if (!result)
+                _accountsRepository.Delete(accounts); //melakukan Delete Accounts
+
+                return Ok(new ResponseOkHandler<EmployeesDto>("Data has been Deleted"));
+
+            }
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Id not found");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Delete Data", ex.Message)); //error pada repository
             }
-
-            return Ok("Accounts has been deleted");
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Bookings;
+using WebApi.DTOs.Employees;
+using WebApi.Utilities.Handler;
 
 namespace WebApi.Controllers
 {
@@ -22,12 +24,12 @@ namespace WebApi.Controllers
             var result = _bookingRepository.GetAll(); //mengambil semua data Booking
             if (!result.Any())
             {
-                return NotFound("Data not found");
+                return NotFound(new ResponseNotFoundHandler("Data not found"));
             }
 
             var data = result.Select(x => (BookingsDto)x);
 
-            return Ok(data);
+            return Ok(new ResponseOkHandler<IEnumerable<BookingsDto>>(data, "Data retrieve Successfully"));
         }
 
         //Logic untuk Get Booking/{guid}
@@ -37,61 +39,74 @@ namespace WebApi.Controllers
             var result = _bookingRepository.GetByGuid(guid); //mengambil data Booking By Guid
             if (result is null)
             {
-                return NotFound("Id not found");
+                return NotFound(new ResponseNotFoundHandler("Id not found"));
             }
 
-            return Ok((BookingsDto)result);
+            return Ok(new ResponseOkHandler<BookingsDto>((BookingsDto)result, "Data retrieve Successfully"));
         }
 
         //Logic untuk Post Booking/
         [HttpPost]
         public IActionResult Insert(NewBookingsDto newBookingsDto)
         {
-            var result = _bookingRepository.Create(newBookingsDto); //melakukan Create Booking
-            if (result is null)
+            try
             {
-                return BadRequest("Failed to Create Data");
-            }
+                var result = _bookingRepository.Create(newBookingsDto); //melakukan Create Booking
 
-            return Ok((BookingsDto)result);
+                return Ok(new ResponseOkHandler<BookingsDto>((BookingsDto)result, "Insert Success"));
+
+            }
+            catch (ExceptionHandler ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("failed to Create Data", ex.Message)); //error pada repository
+            }
         }
 
         //Logic untuk PUT Booking
         [HttpPut]
         public IActionResult Update(BookingsDto bookingsDto)
         {
-            var entity = _bookingRepository.GetByGuid(bookingsDto.Guid);
-            if (entity is null)
-            {
-                return NotFound("Id not Found");
-            }
 
-            var result = _bookingRepository.Update(bookingsDto); //melakukan update Booking
-            if (!result)
+            try
             {
-                return BadRequest("Failed to Update Data");
-            }
+                var entity = _bookingRepository.GetByGuid(bookingsDto.Guid);
+                if (entity is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Id not Found"));
+                }
 
-            return Ok("Data has been Updated");
+                _bookingRepository.Update(bookingsDto); //melakukan update Booking
+
+                return Ok(new ResponseOkHandler<BookingsDto>("Data has been Updated"));
+
+            }
+            catch (ExceptionHandler ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Update Data", ex.Message)); //error pada repository
+            }
         }
 
         //Logic untuk Delete Booking
         [HttpDelete("{guid}")]
         public IActionResult Delete(Guid guid)
         {
-            var booking = _bookingRepository.GetByGuid(guid); //mengambil booking by GUID
-            if (booking is null)
+            try
             {
-                return NotFound("Id not Found");
-            }
+                var booking = _bookingRepository.GetByGuid(guid); //mengambil booking by GUID
+                if (booking is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Id not Found"));
+                }
 
-            var result = _bookingRepository.Delete(booking); //melakukan Delete Booking
-            if (!result)
+                _bookingRepository.Delete(booking); //melakukan Delete Booking
+
+                return Ok(new ResponseOkHandler<EmployeesDto>("Data has been Deleted"));
+
+            }
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Id not found");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Delete Data", ex.Message)); //error pada repository
             }
-
-            return Ok("Booking has been deleted");
         }
     }
 }

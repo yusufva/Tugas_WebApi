@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.DTOs.Employees;
 using WebApi.DTOs.Roles;
+using WebApi.Utilities.Handler;
 
 namespace WebApi.Controllers
 {
@@ -22,12 +24,12 @@ namespace WebApi.Controllers
             var result = _roleRepository.GetAll(); //mengambil semua data Role
             if (!result.Any())
             {
-                return NotFound("Data not found");
+                return NotFound(new ResponseNotFoundHandler("Data not found"));
             }
 
             var data = result.Select(x => (RoleDto)x);
 
-            return Ok(data);
+            return Ok(new ResponseOkHandler<IEnumerable<RoleDto>>(data, "Data retrieve Successfully"));
         }
 
         //Logic untuk Get Role/{guid}
@@ -37,61 +39,71 @@ namespace WebApi.Controllers
             var result = _roleRepository.GetByGuid(guid); //mengambil data Role By Guid
             if (result is null)
             {
-                return NotFound("Id not found");
+                return NotFound(new ResponseNotFoundHandler("Id not found"));
             }
 
-            return Ok((RoleDto)result);
+            return Ok(new ResponseOkHandler<RoleDto>((RoleDto)result, "Data retrieve Successfully"));
         }
 
         //Logic untuk Post Role/
         [HttpPost]
         public IActionResult Insert(NewRoleDto newRoleDto)
         {
-            var result = _roleRepository.Create(newRoleDto); //melakukan Create Role
-            if (result is null)
+            try
             {
-                return BadRequest("Failed to Create Data");
-            }
+                var result = _roleRepository.Create(newRoleDto); //melakukan Create Role
+                return Ok(new ResponseOkHandler<RoleDto>((RoleDto)result, "Insert Success"));
 
-            return Ok((RoleDto)result);
+            }
+            catch (ExceptionHandler ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("failed to Create Data", ex.Message)); //error pada repository
+            }
         }
 
         //Logic untuk PUT Role
         [HttpPut]
         public IActionResult Update(RoleDto roleDto)
         {
-            var entity = _roleRepository.GetByGuid(roleDto.Guid);
-            if (entity is null)
+            try
             {
-                return NotFound("Id not Found");
-            }
+                var entity = _roleRepository.GetByGuid(roleDto.Guid);
+                if (entity is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Id not Found"));
+                }
 
-            var result = _roleRepository.Update(roleDto); //melakukan update Role
-            if (!result)
+                _roleRepository.Update(roleDto); //melakukan update Role
+
+                return Ok(new ResponseOkHandler<RoleDto>("Data has been Updated"));
+
+            }
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Failed to Update Data");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Update Data", ex.Message)); //error pada repository
             }
-
-            return Ok("Data has been Updated");
         }
 
         //Logic untuk Delete Role
         [HttpDelete("{guid}")]
         public IActionResult Delete(Guid guid)
         {
-            var role = _roleRepository.GetByGuid(guid); //mengambil role by GUID
-            if (role is null)
+            try
             {
-                return NotFound("Id not Found");
-            }
+                var role = _roleRepository.GetByGuid(guid); //mengambil role by GUID
+                if (role is null)
+                {
+                    return NotFound(new ResponseNotFoundHandler("Id not Found"));
+                }
 
-            var result = _roleRepository.Delete(role); //melakukan Delete Role
-            if (!result)
+                _roleRepository.Delete(role); //melakukan Delete Role
+
+                return Ok(new ResponseOkHandler<RoleDto>("Data has been Deleted"));
+            }
+            catch (ExceptionHandler ex)
             {
-                return BadRequest("Id not found");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Delete Data", ex.Message)); //error pada repository
             }
-
-            return Ok("Role has been deleted");
         }
     }
 }
