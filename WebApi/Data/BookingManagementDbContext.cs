@@ -22,13 +22,13 @@ namespace WebApi.Data
             base.OnModelCreating(modelBuilder);
 
             //menambahkan constraint unique
-            modelBuilder.Entity<Employee>().HasIndex(e => new
+            modelBuilder.Entity<Employee>(entity =>
             {
-                e.Nik,
-                e.Email,
-                e.PhoneNumber
-            }).IsUnique();
-
+                entity.HasIndex(e => e.Nik).IsUnique();
+                entity.HasIndex(e => e.Email).IsUnique();
+                entity.HasIndex(e => e.PhoneNumber).IsUnique();
+            });
+            
             // 1 University has Many Educations
             modelBuilder.Entity<University>()
                 .HasMany(e => e.Educations)
