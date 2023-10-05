@@ -7,6 +7,7 @@ namespace WebApi.DTOs.Account
         public int Otp {  get; set; } //deklarasi property
         public string Password { get; set; }
         public bool IsUsed { get; set; } //deklarasi property
+        public DateTime ExpiredTime { get; set; }
 
         public static explicit operator AccountsDto(Accounts accounts) //implementasi explicit Operator
         {
@@ -15,7 +16,8 @@ namespace WebApi.DTOs.Account
                 Guid = accounts.Guid,
                 Password = accounts.Password,
                 Otp = accounts.Otp,
-                IsUsed = accounts.IsUsed
+                IsUsed = accounts.IsUsed,
+                ExpiredTime = accounts.ExpiredTime,
             };
         }
 
@@ -27,6 +29,7 @@ namespace WebApi.DTOs.Account
                 Password = accountsDto.Password,
                 Otp = accountsDto.Otp,
                 IsUsed = accountsDto.IsUsed,
+                ExpiredTime = accountsDto.ExpiredTime,
                 ModifiedDate = DateTime.Now
             };
         }
