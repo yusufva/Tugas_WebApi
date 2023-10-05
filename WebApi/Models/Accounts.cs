@@ -11,6 +11,8 @@ namespace WebApi.Models
         public int Otp {  get; set; } //property pada model
         [Column("is_used")] //penamaan column pada orm
         public bool IsUsed { get; set; } //property pada model
+        [Column("expired_time", TypeName = "datetime2")] //penamaan column pada orm
+        public DateTime ExpiredTime { get; set; } //property pada model
 
         //cardinality
         public ICollection<AccountRole>? AccountRoles { get; set; }
