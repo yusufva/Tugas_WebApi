@@ -11,10 +11,54 @@ namespace WebApi.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly IAccountsRepository _accountsRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public AccountsController(IAccountsRepository accountsRepository)
+        public AccountsController(IAccountsRepository accountsRepository, IEmployeeRepository employeeRepository)
         {
             _accountsRepository = accountsRepository;
+            _employeeRepository = employeeRepository;
+        }
+
+        [HttpPost("change-password")]
+        public IActionResult ChangePassword(ChangePasswordRequestDto changePasswordRequest)
+        {
+            var employee = _employeeRepository.GetByEmail(changePasswordRequest.Email);
+            if (employee == null)
+            {
+                return NotFound(new ResponseNotFoundHandler("data not found"));
+            }
+
+            var account = _accountsRepository.GetByGuid(employee.Guid);
+            if (account == null)
+            {
+                return NotFound(new ResponseNotFoundHandler("account not found"));
+            }
+
+            if (changePasswordRequest.Otp != account.Otp)
+            {
+                return BadRequest(new ResponseBadRequestHandler("OTP Error", "OTP does not match"));
+            }
+            if (account.IsUsed == true)
+            {
+                return BadRequest(new ResponseBadRequestHandler("OTP Error", "This OTP has been used"));
+            }
+            if (DateTime.Now > account.ExpiredTime)
+            {
+                return BadRequest(new ResponseBadRequestHandler("OTP Error", "This OTP has been Expired"));
+            }
+
+            var toUpdate = new Accounts();
+            toUpdate.Guid = account.Guid;
+            toUpdate.Password = HashHandler.HashPassword(changePasswordRequest.NewPassword);
+            toUpdate.Otp = account.Otp;
+            toUpdate.IsUsed = true;
+            toUpdate.ExpiredTime = account.ExpiredTime;
+            toUpdate.CreatedDate = account.CreatedDate;
+            toUpdate.ModifiedDate = DateTime.Now;
+
+            _accountsRepository.Update(toUpdate);
+
+            return Ok(new ResponseOkHandler<ChangePasswordRequestDto>("Password has been changed"));
         }
 
         //Logic untuk Get Accounts
