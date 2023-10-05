@@ -27,6 +27,13 @@ builder.Services.AddScoped<IAccountsRepository, AccountsRepository>(); //mengins
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>(); //menginstance Employee Repo
 builder.Services.AddScoped<GenerateHandler>(); //menginstance Generate Handler
 
+// Add email Service to Controller
+builder.Services.AddTransient<IEmailHandler, EmailHandler>(_ => new EmailHandler(
+        builder.Configuration["SmtpService:Server"],
+        int.Parse(builder.Configuration["SmtpService:Port"]),
+        builder.Configuration["SmtpService:FromEmailAddress"]
+    ));
+
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
