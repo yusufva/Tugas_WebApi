@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Account;
+using WebApi.DTOs.Employees;
 using WebApi.Models;
 using WebApi.Utilities.Handler;
 
@@ -12,14 +13,17 @@ namespace WebApi.Controllers
     {
         private readonly IAccountsRepository _accountsRepository;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUniversityRepository _universityRepository;
+        private readonly IEmailHandler _emailHandler;
 
-        public AccountsController(IAccountsRepository accountsRepository, IEmployeeRepository employeeRepository)
+        public AccountsController(IAccountsRepository accountsRepository, IEmployeeRepository employeeRepository, IUniversityRepository universityRepository)
         {
             _accountsRepository = accountsRepository;
             _employeeRepository = employeeRepository;
+            _universityRepository = universityRepository;
         }
 
-        [HttpPost("change-password")]
+        [HttpPut("change-password")]
         public IActionResult ChangePassword(ChangePasswordRequestDto changePasswordRequest)
         {
             var employee = _employeeRepository.GetByEmail(changePasswordRequest.Email);
@@ -59,6 +63,55 @@ namespace WebApi.Controllers
             _accountsRepository.Update(toUpdate);
 
             return Ok(new ResponseOkHandler<ChangePasswordRequestDto>("Password has been changed"));
+        }
+
+        [HttpPost("register")]
+        public IActionResult Register(AccountRegisterRequestDto accountRegisterRequest)
+        {
+            try
+            {
+                var university = _universityRepository.GetByCode(accountRegisterRequest.UniversityCode);
+                var isValid = true;
+                if (university is null)
+                {
+                    isValid = false;
+                }
+
+                var register = _accountsRepository.Register(accountRegisterRequest, isValid);
+
+                return Ok(new ResponseOkHandler<AccountRegisterRequestDto>(register, "Account Creation Success"));
+            }
+            catch (ExceptionHandler ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Register employee", ex.Message));
+            }
+        }
+
+
+        [HttpPost("login")]
+        public IActionResult Login(EmployeeLoginDto employeeLogin)
+        {
+            var employee = _employeeRepository.GetByEmail(employeeLogin.Email);
+            if (employee == null)
+            {
+                return NotFound(new ResponseNotFoundHandler("Account or Password is invalid"));
+            }
+
+            var account = _accountsRepository.GetByGuid(employee.Guid);
+            if (account == null)
+            {
+                return NotFound(new ResponseNotFoundHandler("Account does not Valid"));
+            }
+
+            var isValid = HashHandler.ValidatePassword(employeeLogin.Password, account.Password);
+            if (!isValid)
+            {
+                return BadRequest(new ResponseBadRequestHandler("Login Error", "Account or Password is invalid"));
+            }
+
+            //Token Handler
+
+            return Ok(new ResponseOkHandler<EmployeeLoginDto>("User successfully Logged in"));
         }
 
         //Logic untuk Get Accounts

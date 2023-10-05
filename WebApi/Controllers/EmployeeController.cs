@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Employees;
-using WebApi.DTOs.Universities;
 using WebApi.Models;
 using WebApi.Utilities.Handler;
 
@@ -15,15 +14,17 @@ namespace WebApi.Controllers
         private readonly IEducationRepository _educationRepository;
         private readonly IUniversityRepository _universityRepository;
         private readonly IAccountsRepository _accountsRepository;
+        private readonly IEmailHandler _emailHandler;
         private readonly GenerateHandler _generateHandler;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, GenerateHandler generateHandler, IUniversityRepository universityRepository, IEducationRepository educationRepository, IAccountsRepository accountsRepository)
+        public EmployeeController(IEmployeeRepository employeeRepository, GenerateHandler generateHandler, IUniversityRepository universityRepository, IEducationRepository educationRepository, IAccountsRepository accountsRepository, IEmailHandler emailHandler)
         {
             _employeeRepository = employeeRepository;
             _generateHandler = generateHandler;
             _universityRepository = universityRepository;
             _educationRepository = educationRepository;
             _accountsRepository = accountsRepository;
+            _emailHandler = emailHandler;
         }
 
         //Logic untuk Get Employee
@@ -164,8 +165,7 @@ namespace WebApi.Controllers
                 return NotFound(new ResponseNotFoundHandler("Data not found"));
             }
 
-            int otp;
-            int.TryParse(OtpHandler.GenerateRandomOtp(), out otp);
+            var otp = OtpHandler.GenerateRandomOtp();
 
             var accounts = _accountsRepository.GetByGuid(employee.Guid);
             var otpUpdate = new Accounts();
@@ -178,56 +178,10 @@ namespace WebApi.Controllers
             otpUpdate.ExpiredTime = DateTime.Now.AddMinutes(5);
             _accountsRepository.Update(otpUpdate);
 
-            return Ok(new ResponseOkHandler<ForgotPasswordResponseDto>((ForgotPasswordResponseDto)otp, "password request has been send"));
+            _emailHandler.Send("Forgot Password", $"Your Reset OTP is {otp}", forgotPasswordDto.Email);
+
+            return Ok(new ResponseOkHandler<ForgotPasswordResponseDto>("OTP has send to your email"));
         }
-
-        [HttpPost("register")]
-        public IActionResult Register(EmployeeRegisterRequestDto employeeRegisterRequest)
-        {
-            try
-            {
-
-            var university = _universityRepository.GetByCode(employeeRegisterRequest.UniversityCode);
-            var isValid = true;
-            if (university is null)
-            {
-                isValid = false;
-            }
-
-            var register = _employeeRepository.Register(employeeRegisterRequest, isValid);
-
-            return Ok(new ResponseOkHandler<EmployeeRegisterRequestDto>(register, "Insert Success"));
-            }
-            catch (ExceptionHandler ex) 
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Register employee", ex.Message));
-            }
-        }
-
-        [HttpPost("login")]
-        public IActionResult Login(EmployeeLoginDto employeeLogin)
-        {
-            var employee = _employeeRepository.GetByEmail(employeeLogin.Email);
-            if(employee == null)
-            {
-                return NotFound(new ResponseNotFoundHandler("Account or Password is invalid"));
-            }
-
-            var account = _accountsRepository.GetByGuid(employee.Guid);
-            if(account == null)
-            {
-                return NotFound(new ResponseNotFoundHandler("Account does not Valid"));
-            }
-
-            var isValid = HashHandler.ValidatePassword(employeeLogin.Password, account.Password);
-            if(!isValid)
-            {
-                return BadRequest(new ResponseBadRequestHandler("Login Error", "Account or Password is invalid"));
-            }
-
-            //Token Handler
-
-            return Ok(new ResponseOkHandler<EmployeeLoginDto>("User successfully Logged in"));
-        }
+                
     }
 }

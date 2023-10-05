@@ -3,9 +3,9 @@ using System.Reflection;
 using WebApi.Models;
 using WebApi.Utilities.Enums;
 
-namespace WebApi.DTOs.Employees
+namespace WebApi.DTOs.Account
 {
-    public class EmployeeRegisterRequestDto
+    public class AccountRegisterRequestDto
     {
         public string FirstName { get; set; }
 
@@ -35,7 +35,7 @@ namespace WebApi.DTOs.Employees
 
         public string ConfirmPassword { get; set; }
 
-        public static implicit operator Employee(EmployeeRegisterRequestDto dto) //implementasi implicit Operator
+        public static implicit operator Employee(AccountRegisterRequestDto dto) //implementasi implicit Operator
         {
             return new Employee
             {

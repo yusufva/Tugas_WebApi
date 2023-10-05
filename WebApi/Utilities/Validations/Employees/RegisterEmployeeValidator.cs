@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using WebApi.DTOs.Employees;
+using WebApi.DTOs.Account;
 
 namespace WebApi.Utilities.Validations.Employees
 {
@@ -18,7 +18,7 @@ namespace WebApi.Utilities.Validations.Employees
     //public string Password { get; set; }
     //public string ConfirmPassword { get; set; }
 
-    public class RegisterEmployeeValidator : AbstractValidator<EmployeeRegisterRequestDto>
+    public class RegisterEmployeeValidator : AbstractValidator<AccountRegisterRequestDto>
     {
         public RegisterEmployeeValidator()
         {
