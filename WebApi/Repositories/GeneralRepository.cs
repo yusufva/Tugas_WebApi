@@ -5,7 +5,7 @@ namespace WebApi.Repositories
 {
     public class GeneralRepository<Tentity> where Tentity : class
     {
-        private readonly BookingManagementDbContext _context;
+        protected readonly BookingManagementDbContext _context;
 
         public GeneralRepository(BookingManagementDbContext context)
         {
