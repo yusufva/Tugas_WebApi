@@ -158,29 +158,29 @@ namespace WebApi.Controllers
         [HttpPost("forgot-password")]
         public IActionResult ForgotPassword(ForgotPasswordRequestDto forgotPasswordDto)
         {
-            var employee = _employeeRepository.GetByEmail(forgotPasswordDto.Email);
+            var employee = _employeeRepository.GetByEmail(forgotPasswordDto.Email); //mengambil data employee dari email
 
             if (employee == null)
             {
                 return NotFound(new ResponseNotFoundHandler("Data not found"));
             }
 
-            var otp = OtpHandler.GenerateRandomOtp();
+            var otp = OtpHandler.GenerateRandomOtp(); //melakukan generate otp
 
-            var accounts = _accountsRepository.GetByGuid(employee.Guid);
+            var accounts = _accountsRepository.GetByGuid(employee.Guid); //mengambil data account berdasar employee uid
             var otpUpdate = new Accounts();
             otpUpdate.Guid = employee.Guid;
-            otpUpdate.Otp = otp;
+            otpUpdate.Otp = otp; //melakukan inject otp
             otpUpdate.IsUsed = false;
             otpUpdate.Password = accounts.Password;
             otpUpdate.CreatedDate = accounts.CreatedDate;
             otpUpdate.ModifiedDate = DateTime.Now;
             otpUpdate.ExpiredTime = DateTime.Now.AddMinutes(5);
-            _accountsRepository.Update(otpUpdate);
+            _accountsRepository.Update(otpUpdate); //melakukan update OTP
 
-            _emailHandler.Send("Forgot Password", $"Your Reset OTP is {otp}", forgotPasswordDto.Email);
+            _emailHandler.Send("Forgot Password", $"Your Reset OTP is {otp}", forgotPasswordDto.Email); //mengirimkan otp ke email
 
-            return Ok(new ResponseOkHandler<ForgotPasswordResponseDto>("OTP has send to your email"));
+            return Ok(new ResponseOkHandler<ForgotPasswordResponseDto>("OTP has send to your email")); //response setelah mengirim otp
         }
                 
     }

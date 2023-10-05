@@ -24,7 +24,7 @@ namespace WebApi.Utilities.Handler
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = true
-            };
+            }; //instance email
 
             message.To.Add(new MailAddress(toEmail)); //add tujuan email
 

@@ -13,7 +13,7 @@ namespace WebApi.Repositories
 
         public Employee? GetByEmail(string email)
         {
-            var employee = _context.Set<Employee>().FirstOrDefault(e => e.Email == email);
+            var employee = _context.Set<Employee>().FirstOrDefault(e => e.Email == email); //mengambil data employee berdasarkan email
 
             return employee;
         }

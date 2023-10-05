@@ -26,41 +26,41 @@ namespace WebApi.Controllers
         [HttpPut("change-password")]
         public IActionResult ChangePassword(ChangePasswordRequestDto changePasswordRequest)
         {
-            var employee = _employeeRepository.GetByEmail(changePasswordRequest.Email);
+            var employee = _employeeRepository.GetByEmail(changePasswordRequest.Email); //mengambil data employee berdasar email
             if (employee == null)
             {
                 return NotFound(new ResponseNotFoundHandler("data not found"));
             }
 
-            var account = _accountsRepository.GetByGuid(employee.Guid);
+            var account = _accountsRepository.GetByGuid(employee.Guid); //mengambil data accoun berdasar employee guid
             if (account == null)
             {
                 return NotFound(new ResponseNotFoundHandler("account not found"));
             }
 
-            if (changePasswordRequest.Otp != account.Otp)
+            if (changePasswordRequest.Otp != account.Otp) //mengecek kecocokan otp
             {
                 return BadRequest(new ResponseBadRequestHandler("OTP Error", "OTP does not match"));
             }
-            if (account.IsUsed == true)
+            if (account.IsUsed == true) //mengecek otp sudah digunakan atau belum
             {
                 return BadRequest(new ResponseBadRequestHandler("OTP Error", "This OTP has been used"));
             }
-            if (DateTime.Now > account.ExpiredTime)
+            if (DateTime.Now > account.ExpiredTime) //mengecek apakah otp sudah expired
             {
                 return BadRequest(new ResponseBadRequestHandler("OTP Error", "This OTP has been Expired"));
             }
 
             var toUpdate = new Accounts();
             toUpdate.Guid = account.Guid;
-            toUpdate.Password = HashHandler.HashPassword(changePasswordRequest.NewPassword);
+            toUpdate.Password = HashHandler.HashPassword(changePasswordRequest.NewPassword); //melakukan inject password baru
             toUpdate.Otp = account.Otp;
             toUpdate.IsUsed = true;
             toUpdate.ExpiredTime = account.ExpiredTime;
             toUpdate.CreatedDate = account.CreatedDate;
             toUpdate.ModifiedDate = DateTime.Now;
 
-            _accountsRepository.Update(toUpdate);
+            _accountsRepository.Update(toUpdate); //melakukan update accounts
 
             return Ok(new ResponseOkHandler<ChangePasswordRequestDto>("Password has been changed"));
         }
@@ -70,20 +70,20 @@ namespace WebApi.Controllers
         {
             try
             {
-                var university = _universityRepository.GetByCode(accountRegisterRequest.UniversityCode);
-                var isValid = true;
-                if (university is null)
+                var university = _universityRepository.GetByCode(accountRegisterRequest.UniversityCode); //mengambil data university by code
+                var isValid = true; //defaul value isValid = true
+                if (university is null) //jika tidak ditemukan university
                 {
-                    isValid = false;
+                    isValid = false; //isvalid menjadi false
                 }
 
-                var register = _accountsRepository.Register(accountRegisterRequest, isValid);
+                var register = _accountsRepository.Register(accountRegisterRequest, isValid); //memanggil function register pada account repo
 
-                return Ok(new ResponseOkHandler<AccountRegisterRequestDto>(register, "Account Creation Success"));
+                return Ok(new ResponseOkHandler<AccountRegisterRequestDto>(register, "Account Creation Success")); //mengembalikan message register success
             }
             catch (ExceptionHandler ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Register employee", ex.Message));
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseInternalServerErrorHandler("Failed to Register employee", ex.Message)); //mengembalikan error jika account creation fail
             }
         }
 
@@ -91,27 +91,27 @@ namespace WebApi.Controllers
         [HttpPost("login")]
         public IActionResult Login(EmployeeLoginDto employeeLogin)
         {
-            var employee = _employeeRepository.GetByEmail(employeeLogin.Email);
+            var employee = _employeeRepository.GetByEmail(employeeLogin.Email); //mengambil data employee berdasar email
             if (employee == null)
             {
-                return NotFound(new ResponseNotFoundHandler("Account or Password is invalid"));
+                return NotFound(new ResponseNotFoundHandler("Account or Password is invalid")); //response jika employee tidak ditemukan
             }
 
-            var account = _accountsRepository.GetByGuid(employee.Guid);
+            var account = _accountsRepository.GetByGuid(employee.Guid); //mengambil data account berdasar employee guid
             if (account == null)
             {
-                return NotFound(new ResponseNotFoundHandler("Account does not Valid"));
+                return NotFound(new ResponseNotFoundHandler("Account does not Valid")); //response jika account tidak ditemukan
             }
 
-            var isValid = HashHandler.ValidatePassword(employeeLogin.Password, account.Password);
-            if (!isValid)
+            var isValid = HashHandler.ValidatePassword(employeeLogin.Password, account.Password); //melakukan validasi password yang diinput dengan yang di database
+            if (!isValid) //jika false
             {
-                return BadRequest(new ResponseBadRequestHandler("Login Error", "Account or Password is invalid"));
+                return BadRequest(new ResponseBadRequestHandler("Login Error", "Account or Password is invalid")); //response jika password salah
             }
 
-            //Token Handler
+            //Token Handler menunggu diajarkan
 
-            return Ok(new ResponseOkHandler<EmployeeLoginDto>("User successfully Logged in"));
+            return Ok(new ResponseOkHandler<EmployeeLoginDto>("User successfully Logged in")); //respponse ketika user berhasil login
         }
 
         //Logic untuk Get Accounts
