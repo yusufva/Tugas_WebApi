@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WebApi.Contracts;
 using WebApi.DTOs.Account;
 using WebApi.DTOs.Employees;
@@ -9,21 +11,28 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AccountsController : ControllerBase
     {
         private readonly IAccountsRepository _accountsRepository;
+        private readonly IAccountRoleRepository _accountRoleRepository;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IUniversityRepository _universityRepository;
-        private readonly IEmailHandler _emailHandler;
+        private readonly IRolesRepository _rolesRepository;
+        private readonly ITokenHandler _tokenHandler;
 
-        public AccountsController(IAccountsRepository accountsRepository, IEmployeeRepository employeeRepository, IUniversityRepository universityRepository)
+        public AccountsController(IAccountsRepository accountsRepository, IEmployeeRepository employeeRepository, IUniversityRepository universityRepository, ITokenHandler tokenHandler, IAccountRoleRepository accountRoleRepository, IRolesRepository rolesRepository)
         {
             _accountsRepository = accountsRepository;
             _employeeRepository = employeeRepository;
             _universityRepository = universityRepository;
+            _tokenHandler = tokenHandler;
+            _accountRoleRepository = accountRoleRepository;
+            _rolesRepository = rolesRepository;
         }
 
         [HttpPut("change-password")]
+        [AllowAnonymous]
         public IActionResult ChangePassword(ChangePasswordRequestDto changePasswordRequest)
         {
             var employee = _employeeRepository.GetByEmail(changePasswordRequest.Email); //mengambil data employee berdasar email
@@ -66,6 +75,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public IActionResult Register(AccountRegisterRequestDto accountRegisterRequest)
         {
             try
@@ -89,6 +99,7 @@ namespace WebApi.Controllers
 
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public IActionResult Login(EmployeeLoginDto employeeLogin)
         {
             var employee = _employeeRepository.GetByEmail(employeeLogin.Email); //mengambil data employee berdasar email
@@ -109,9 +120,25 @@ namespace WebApi.Controllers
                 return BadRequest(new ResponseBadRequestHandler("Login Error", "Account or Password is invalid")); //response jika password salah
             }
 
-            //Token Handler menunggu diajarkan
+            //Token Handler
+            var payload = new List<Claim>();
+            payload.Add(new Claim("Email", employee.Email));
+            payload.Add(new Claim("FullName", string.Concat(employee.FirstName, " ", employee.LastName)));
 
-            return Ok(new ResponseOkHandler<EmployeeLoginDto>("User successfully Logged in")); //respponse ketika user berhasil login
+            var getRoleName = from ar in _accountRoleRepository.GetAll()
+                              join r in _rolesRepository.GetAll() on ar.RoleGuid equals r.Guid
+                              where ar.AccountGuid == account.Guid
+                              select r.Name;
+
+            foreach(var roleName in getRoleName)
+            {
+                payload.Add(new Claim(ClaimTypes.Role, roleName));
+            }
+                              
+
+            var token = _tokenHandler.GenerateToken(payload);
+
+            return Ok(new ResponseOkHandler<object>(new { Token = token },"User successfully Logged in")); //respponse ketika user berhasil login
         }
 
         //Logic untuk Get Accounts

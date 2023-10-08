@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
-using WebApi.DTOs.Employees;
 using WebApi.DTOs.Roles;
 using WebApi.Utilities.Handler;
 
@@ -8,6 +8,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles ="Admin")] //menambahkan role akses
     public class RoleController : ControllerBase
     {
         private readonly IRolesRepository _roleRepository;

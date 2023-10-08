@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Universities;
 using WebApi.Utilities.Handler;
@@ -8,6 +9,7 @@ namespace WebApi.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UniversityController : ControllerBase
     {
         private readonly IUniversityRepository _universityRepository;

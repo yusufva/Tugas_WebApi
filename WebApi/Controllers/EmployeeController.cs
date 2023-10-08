@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
 using WebApi.DTOs.Employees;
 using WebApi.Models;
@@ -8,6 +9,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles ="Manager, Admin")] //menambahkan role akses
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
@@ -156,6 +158,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("forgot-password")]
+        [AllowAnonymous]
         public IActionResult ForgotPassword(ForgotPasswordRequestDto forgotPasswordDto)
         {
             var employee = _employeeRepository.GetByEmail(forgotPasswordDto.Email); //mengambil data employee dari email

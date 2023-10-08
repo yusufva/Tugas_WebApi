@@ -1,19 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts;
+using WebApi.DTOs.Bookings;
 using WebApi.DTOs.Rooms;
+using WebApi.Repositories;
 using WebApi.Utilities.Handler;
 
 namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RoomController : ControllerBase
     {
         private readonly IRoomRepository _roomRepository;
+        private readonly IBookingRepository _bookingRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public RoomController(IRoomRepository roomRepository)
+        public RoomController(IRoomRepository roomRepository, IBookingRepository bookingRepository, IEmployeeRepository employeeRepository)
         {
             _roomRepository = roomRepository;
+            _bookingRepository = bookingRepository;
+            _employeeRepository = employeeRepository;
         }
 
         //Logic untuk Get Room
@@ -42,6 +50,69 @@ namespace WebApi.Controllers
             }
 
             return Ok(new ResponseOkHandler<RoomDto>((RoomDto)result, "Data retrieve Successfully"));
+        }
+
+        // mengambil data ruangan yang tersedia
+        [HttpGet("available")]
+        public IActionResult Available()
+        {
+            var today = DateTime.Today; //mendefinisikan variabel hari ini
+
+            var bookings = _bookingRepository.GetAll(); //mengambil data booking
+            var rooms = _roomRepository.GetAll(); //mengambil data room
+
+            //LinQ untuk melakukan join dan mengambil data booking hari ini
+            var bookingToday = from b in bookings
+                               join r in rooms on b.RoomGuid equals r.Guid
+                               where b.StartDate == DateTime.Today || b.EndDate == DateTime.Today
+                               select b.RoomGuid;
+
+            //LinQ untuk melakukan join dan mengambil data room yang tidak di booking
+            var availableRoom = from r in rooms
+                                where !bookingToday.Contains(r.Guid)
+                                select new
+                                {
+                                    RoomGuid = r.Guid,
+                                    RoomName = r.Name,
+                                    r.Floor,
+                                    r.Capacity
+                                };
+            if (!availableRoom.Any())
+            {
+                return NotFound(new ResponseNotFoundHandler("Data not found")); //response jika data tidak ditemukan
+            }
+
+            return Ok(new ResponseOkHandler<IEnumerable<object>>(availableRoom, "data retrieve successfully")); //response untuk menampilkan data
+        }
+
+        //mengambil data ruangan yang sedang dipakai hari ini
+        [HttpGet("inused")]
+        public IActionResult GetInUsed()
+        {
+            var booking = _bookingRepository.GetAll(); //mengambil data booking
+            var room = _roomRepository.GetAll(); //mengambil data room
+            var employee = _employeeRepository.GetAll(); //mengambil data employee
+
+            //LinQ untuk melakukan join dan mengambil data yang dibutuhkan
+            var inUsed = from b in booking
+                         join r in room on b.RoomGuid equals r.Guid
+                         join e in employee on b.EmployeeGuid equals e.Guid
+                         where b.StartDate == DateTime.Today || b.EndDate == DateTime.Today
+                         select new BookedTodayDto
+                         {
+                             BookingGuid = b.Guid,
+                             RoomName = r.Name,
+                             Status = b.Status,
+                             Floor = r.Floor,
+                             BookedBy = string.Concat(e.FirstName, " ", e.LastName)
+                         };
+            if (!inUsed.Any())
+            {
+                return NotFound(new ResponseNotFoundHandler("Data not found")); //response jika data tidak ditemukan
+            }
+
+
+            return Ok(new ResponseOkHandler<IEnumerable<BookedTodayDto>>(inUsed, "Data retrieve successfully")); //response untuk menampilkan data
         }
 
         //Logic untuk Post Room/
