@@ -8,6 +8,8 @@ namespace WebApi.Repositories
     {
         public AccountRoleRepository(BookingManagementDbContext context) : base(context)
         {
+            
         }
+
     }
 }

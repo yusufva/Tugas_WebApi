@@ -71,6 +71,15 @@ namespace WebApi.Repositories
                 _context.Set<Education>().Add(education); //melakukan add account baru ke database
                 _context.SaveChanges(); //melakukan save kedalam database
 
+                var defaultRole = _context.Set<Role>().FirstOrDefault(r => r.Name == "User").Guid;
+                _context.ChangeTracker.Clear(); //melakukan clear changetracker
+
+                var accountRole = new AccountRole();
+                accountRole.AccountGuid = newEmployee.Guid;
+                accountRole.RoleGuid = defaultRole;
+                _context.Set<AccountRole>().Add(accountRole); //melakukan add account baru ke database
+                _context.SaveChanges(); //melakukan save kedalam database
+
                 transaction.Commit(); //melakukan commit transaction setelah semua berhasil
                 return request; //mengembalikan data request
             }
