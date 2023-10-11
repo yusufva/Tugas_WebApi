@@ -1,0 +1,138 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.text-bg-normal {
+    color: #fff !important;
+    background-color: #A8A77A !important
+}
+
+.text-bg-fire {
+    color: #fff !important;
+    background-color: #EE8130 !important
+}
+
+.text-bg-water {
+    color: #fff !important;
+    background-color: #6390F0 !important
+}
+
+.text-bg-electric {
+    color: #fff !important;
+    background-color: #F7D02C !important
+}
+
+.text-bg-grass {
+    color: #fff !important;
+    background-color: #7AC74C !important
+}
+
+.text-bg-ice {
+    color: #fff !important;
+    background-color: #96D9D6 !important
+}
+
+.text-bg-fighting {
+    color: #fff !important;
+    background-color: #C22E28 !important
+}
+
+.text-bg-poison {
+    color: #fff !important;
+    background-color: #A33EA1 !important
+}
+
+.text-bg-ground {
+    color: #fff !important;
+    background-color: #E2BF65 !important
+}
+
+.text-bg-flying {
+    color: #fff !important;
+    background-color: #A98FF3 !important
+}
+
+.text-bg-psychic {
+    color: #fff !important;
+    background-color: #F95587 !important
+}
+
+.text-bg-bug {
+    color: #fff !important;
+    background-color: #A6B91A !important
+}
+
+.text-bg-rock {
+    color: #fff !important;
+    background-color: #B6A136 !important
+}
+
+.text-bg-ghost {
+    color: #fff !important;
+    background-color: #735797 !important
+}
+
+.text-bg-dragon {
+    color: #fff !important;
+    background-color: #6F35FC !important
+}
+
+.text-bg-dark {
+    color: #fff !important;
+    background-color: #705746 !important
+}
+
+.text-bg-steel {
+    color: #fff !important;
+    background-color: #B7B7CE !important
+}
+
+.text-bg-fairy {
+    color: #fff !important;
+    background-color: #D685AD !important
+}
+
+.bg-hp {
+    color: #000 !important;
+    background-color: #FF0000 !important
+}
+
+.bg-attack {
+    color: #000 !important;
+    background-color: #F08030 !important
+}
+
+.bg-defense {
+    color: #000 !important;
+    background-color: #F8D030 !important
+}
+
+.bg-special-attack {
+    color: #000 !important;
+    background-color: #6890F0 !important
+}
+
+.bg-special-defense {
+    color: #000 !important;
+    background-color: #78C850 !important
+}
+
+.bg-speed {
+    color: #000 !important;
+    background-color: #F85888 !important
+}
