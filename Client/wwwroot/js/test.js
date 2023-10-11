@@ -14,7 +14,12 @@ $(document).ready(() => {
                     return meta.row + 1;
                 }
             },
-            { data: 'name' },
+            {
+                data: 'name',
+                render: function (data, type, row) {
+                    return data.charAt(0).toUpperCase() + data.slice(1);
+                }
+            },
             {
                 render: (data, type, row) => {
                     return `<button type="button" onclick="detail('${row.url}')" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPoke">Detail</button>`
@@ -59,17 +64,17 @@ function detail(url) {
         let stats = ""
 
         $.each(ress.moves, (key, val) => {
-            moves += `<ul class="list-group col-4"><li class="list-group-item fs-3">${val.move.name}</li></ul>`
+            moves += `<ul class="list-group col-4"><li class="list-group-item fs-4">${val.move.name}</li></ul>`
         })
 
         $.each(ress.types, (key, val) => {
-            types += `<span class="badge rounded-pill text-bg-${val.type.name} fs-3">${val.type.name[0].toUpperCase() + val.type.name.slice(1)}</span>`
+            types += `<span class="badge rounded-pill text-bg-${val.type.name} fs-4">${val.type.name[0].toUpperCase() + val.type.name.slice(1)}</span>`
         })
 
         $.each(ress.stats, (key, val) => {
             stats += `
                 <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 40px">
-                  <div class="progress-bar fs-3 fw-semibold overflow-visible bg-${val.stat.name}" style="width: ${val.base_stat / 255 * 100}%">&nbsp${val.stat.name[0].toUpperCase() + val.stat.name.slice(1)}</div>
+                  <div class="progress-bar fs-5 fw-bold overflow-visible bg-${val.stat.name}" style="width: ${val.base_stat / 255 * 100}%">&nbsp${val.stat.name[0].toUpperCase() + val.stat.name.slice(1)}</div>
                 </div><br>
             `
         })
