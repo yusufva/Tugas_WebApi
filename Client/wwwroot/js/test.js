@@ -1,7 +1,9 @@
 ﻿//$("h1").html("ini saya ubah dengan jquery")
 
+//inisialisasi dokumen
 $(document).ready(() => {
     $('#pokeTable').DataTable({
+        ordering: false,
         ajax: {
             url: 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=2000',
             dataSrc: 'results'
@@ -26,7 +28,6 @@ $(document).ready(() => {
                 }
             }
         ],
-        //order: [[1, 'asc']],
         DOM: 'Bfrtip'
     })
 })
@@ -53,6 +54,7 @@ $(document).ready(() => {
 //    console.log(error);
 //})
 
+//function render detail
 function detail(url) {
     $.ajax({
         url: `${url}`,
