@@ -4,13 +4,12 @@
 }
 
 
-    <div class="col-sm-12 text-center">
-
-        <h1>Pokemon List</h1>
-    </div>
-    <div class="col-sm-12 text-center">
+ <div class="col-sm-12 text-center">
+    <h1>Pokemon List</h1>
+ </div>
+ <div class="col-sm-12 text-center">
     <img src="https://static.wikia.nocookie.net/pokemon-fano/images/6/6f/Poke_Ball.png" class="rounded img-fluid" alt="pokeballs">
-    </div>
+ </div>
 
 
 <table class="table table-striped table-hover" id="pokeTable">
@@ -21,14 +20,10 @@
             <th>Action</th>
         </tr>
     </thead>
-    <tbody id="tbodyPoke">
+   @*  <tbody id="tbodyPoke">
         <tr><td colspan="4"><i>Loading...</i></td></tr>
-    </tbody>
+    </tbody> *@
 </table>
-<div class="btn-group" role="group" aria-label="poketale button">
-    <button type="button" class="btn btn-outline-primary" id="prevButton">Previous</button>
-    <button type="button" class="btn btn-outline-primary" id="nextButton">Next</button>
-</div>
 
 
 
@@ -61,19 +56,19 @@
                 <div class="row mt-5">
                     <h2>Moves List</h2>
                 </div>
-                <ul class="list-group" id="pokeMoves">
-
-                </ul>
-            </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="row" id="pokeMoves">
+                                    
                 </div>
             </div>
-        </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
     </div>
 </div>
 
 @section Scripts{
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="~/js/test.js" asp-append-version="true"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
 }
