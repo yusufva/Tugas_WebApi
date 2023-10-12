@@ -81,15 +81,16 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         policy.AllowAnyOrigin();
-policy.AllowAnyHeader();
-policy.WithMethods("GET", "POST", "DELETE", "PUT", "OPTIONS");
+        policy.AllowAnyHeader();
+        policy.WithMethods("GET", "POST", "DELETE", "PUT", "OPTIONS");
     });
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
-builder.Services.AddSwaggerGen(x => {
+builder.Services.AddSwaggerGen(x =>
+{
     x.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
