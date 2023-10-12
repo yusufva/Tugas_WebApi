@@ -1,0 +1,97 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "CRUD";
+    Layout = "_AdminLayout";
+}
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Employee Data</h4>
+            <div class="table-responsive">
+                <table class="table table-hover" id="employeeTable">
+                    <thead>
+                        <tr>
+                            <th>NIK</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalEmployee" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-1 bg-gradient" id="employeeLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form class="forms-sample col-12 grid-margin">
+                        <fieldset disabled>
+                            <div class="form-group">
+                                <label for="nik">NIK</label>
+                                <input type="text" class="form-control disable" id="nik" placeholder="000000">
+                            </div>
+                        </fieldset>
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="First Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="birthDate">Date of Birth</label>
+                            <input type="date" class="form-control" id="birthDate" placeholder="mm/dd/yyyy">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select class="form-control active" id="gender">
+                                <option value=1>Male</option>
+                                <option value=0>Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hireDate">Hiring Date</label>
+                            <input type="date" class="form-control" id="hireDate" placeholder="mm/dd/yyyy">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" id="email" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="text" class="form-control" id="phoneNumber" placeholder="+628...">
+                        </div>
+                        <div id="buttonUpdate">
+                            <button type="button" onclick="" class="btn btn-primary mr-2">Submit</button>
+                            <button class="btn btn-light">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/crud.js" asp-append-version="true"></script>
+}

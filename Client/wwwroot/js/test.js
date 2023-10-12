@@ -24,7 +24,7 @@ $(document).ready(() => {
             },
             {
                 render: (data, type, row) => {
-                    return `<button type="button" onclick="detail('${row.url}')" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPoke">Detail</button>`
+                    return `<button type="button" onclick="detail('${row.url}')" class="btn btn-primary" data-toggle="modal" data-target="#modalPoke">Detail</button>`
                 }
             }
         ],
@@ -76,7 +76,7 @@ function detail(url) {
         $.each(ress.stats, (key, val) => {
             stats += `
                 <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 40px">
-                  <div class="progress-bar fs-5 fw-bold overflow-visible bg-${val.stat.name}" style="width: ${val.base_stat / 255 * 100}%">&nbsp${val.stat.name[0].toUpperCase() + val.stat.name.slice(1)}</div>
+                  <div class="progress-bar fs-4 fw-bold overflow-visible bg-${val.stat.name}" style="width: ${val.base_stat / 255 * 100}%">&nbsp${val.stat.name[0].toUpperCase() + val.stat.name.slice(1)}</div>
                 </div><br>
             `
         })

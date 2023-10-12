@@ -16,5 +16,10 @@ namespace Client.Controllers
         {
             return View();
         }
+
+        public IActionResult CRUD()
+        {
+            return View();
+        }
     }
 }
