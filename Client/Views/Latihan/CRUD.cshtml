@@ -10,10 +10,14 @@
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Employee Data</h4>
-            <div class="table-responsive">
-                <table class="table table-hover" id="employeeTable">
+            <div class="row">
+                <button type="button" onclick="openCreate()" class="btn btn-primary btn-rounded btn-fw" data-toggle="modal" data-target="#modalEmployee">Create New Employee</button>
+            </div>
+            <div class="row table-responsive">
+                <table class="table table-hover table-striped" id="employeeTable">
                     <thead>
                         <tr>
+                            <th>No.</th>
                             <th>NIK</th>
                             <th>First Name</th>
                             <th>Last Name</th>
@@ -35,10 +39,16 @@
     <div class="modal-dialog modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-1 bg-gradient" id="employeeLabel">Modal title</h1>
+                <h1 class="modal-title bg-gradient" id="employeeLabel">Create Employee</h1>
                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="failMessage" style="display:none">
+                    You should check in on some of those fields below.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
                 <div class="row">
                     <form class="forms-sample col-12 grid-margin">
                         <fieldset disabled>
@@ -78,15 +88,14 @@
                             <label for="phoneNumber">Phone Number</label>
                             <input type="text" class="form-control" id="phoneNumber" placeholder="+628...">
                         </div>
-                        <div id="buttonUpdate">
-                            <button type="button" onclick="" class="btn btn-primary mr-2">Submit</button>
-                            <button class="btn btn-light">Cancel</button>
+                        <div >
                         </div>
                     </form>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            <div class="modal-footer" id="buttonUpdate">
+                <button type="button" onclick="Insert()" class="btn btn-primary mr-2" id="submit">Submit</button>
+                <button class="btn btn-light" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>

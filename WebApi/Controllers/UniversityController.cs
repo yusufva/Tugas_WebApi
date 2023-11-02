@@ -9,7 +9,7 @@ namespace WebApi.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class UniversityController : ControllerBase
     {
         private readonly IUniversityRepository _universityRepository;
@@ -21,7 +21,8 @@ namespace WebApi.Controllers
 
         //Logic untuk Get University
         [HttpGet]
-        public IActionResult GetAll() {
+        public IActionResult GetAll()
+        {
             var result = _universityRepository.GetAll();
             if (!result.Any())
             {
@@ -35,9 +36,10 @@ namespace WebApi.Controllers
 
         //Logic untuk Get University/{guid}
         [HttpGet("{guid}")]
-        public IActionResult GetByGuid(Guid guid) { 
+        public IActionResult GetByGuid(Guid guid)
+        {
             var result = _universityRepository.GetByGuid(guid); //mengambil data University By Guid
-            if(result is null)
+            if (result is null)
             {
                 return NotFound(new ResponseNotFoundHandler("Id not found"));
             }
@@ -52,7 +54,7 @@ namespace WebApi.Controllers
             try
             {
                 var result = _universityRepository.Create(universityDto); //melakukan Create University
-                if(result is null)
+                if (result is null)
                 {
                     return BadRequest("Failed to Create Data");
                 }

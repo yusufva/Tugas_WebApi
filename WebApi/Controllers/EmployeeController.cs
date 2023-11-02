@@ -9,7 +9,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles ="Manager, Admin")] //menambahkan role akses
+    //[Authorize(Roles = "Manager, Admin")] //menambahkan role akses
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeRepository _employeeRepository;
@@ -68,8 +68,8 @@ namespace WebApi.Controllers
                 toInsert.Nik = nik; //melakukan injeksi nik yang telah di generate ke object yang akan di create
 
                 var result = _employeeRepository.Create(toInsert); //melakukan Create Employee
-                
-                return Ok(new ResponseOkHandler<EmployeesDto>((EmployeesDto)result,"Insert Success"));
+
+                return Ok(new ResponseOkHandler<EmployeesDto>((EmployeesDto)result, "Insert Success"));
 
             }
             catch (ExceptionHandler ex)
@@ -90,7 +90,22 @@ namespace WebApi.Controllers
                     return NotFound(new ResponseNotFoundHandler("Id not found"));
                 }
 
-                _employeeRepository.Update(employeesDto); //melakukan update Employee
+                var toUpdate = new Employee
+                {
+                    Guid = employeesDto.Guid,
+                    Nik = employeesDto.Nik,
+                    FirstName = employeesDto.FirstName,
+                    LastName = employeesDto.LastName,
+                    BirthDate = employeesDto.BirthDate,
+                    Gender = employeesDto.Gender,
+                    HiringDate = employeesDto.HiringDate,
+                    Email = employeesDto.Email,
+                    PhoneNumber = employeesDto.PhoneNumber,
+                    CreatedDate = entity.CreatedDate,
+                    ModifiedDate = DateTime.Now
+                };
+
+                _employeeRepository.Update(toUpdate); //melakukan update Employee
 
                 return Ok(new ResponseOkHandler<EmployeesDto>("Data has been Updated"));
 
@@ -125,12 +140,13 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("details")]
-        public IActionResult GetDetail() {
+        public IActionResult GetDetail()
+        {
             var employees = _employeeRepository.GetAll();
             var educations = _educationRepository.GetAll();
             var universities = _universityRepository.GetAll();
 
-            if(!(employees.Any() &&  educations.Any() && universities.Any()))
+            if (!(employees.Any() && educations.Any() && universities.Any()))
             {
                 return NotFound(new ResponseNotFoundHandler("Data not found"));
             }
@@ -185,6 +201,6 @@ namespace WebApi.Controllers
 
             return Ok(new ResponseOkHandler<ForgotPasswordResponseDto>("OTP has send to your email")); //response setelah mengirim otp
         }
-                
+
     }
 }

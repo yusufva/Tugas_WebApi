@@ -10,7 +10,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class RoomController : ControllerBase
     {
         private readonly IRoomRepository _roomRepository;

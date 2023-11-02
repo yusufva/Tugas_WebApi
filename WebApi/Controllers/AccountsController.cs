@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Security.Claims;
 using WebApi.Contracts;
 using WebApi.DTOs.Account;
@@ -11,7 +12,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class AccountsController : ControllerBase
     {
         private readonly IAccountsRepository _accountsRepository;
@@ -29,6 +30,14 @@ namespace WebApi.Controllers
             _tokenHandler = tokenHandler;
             _accountRoleRepository = accountRoleRepository;
             _rolesRepository = rolesRepository;
+        }
+
+        [Authorize]
+        [HttpGet("GetClaims/{token}")]
+        public IActionResult GetClaims(string token)
+        {
+            var claims = _tokenHandler.ExtractClaimsFromJwt(token);
+            return Ok(new ResponseOkHandler<ClaimsDTO>(claims, "Claims has been retrieved"));
         }
 
         [HttpPut("change-password")]
@@ -130,15 +139,15 @@ namespace WebApi.Controllers
                               where ar.AccountGuid == account.Guid
                               select r.Name;
 
-            foreach(var roleName in getRoleName)
+            foreach (var roleName in getRoleName)
             {
                 payload.Add(new Claim(ClaimTypes.Role, roleName));
             }
-                              
+
 
             var token = _tokenHandler.GenerateToken(payload);
 
-            return Ok(new ResponseOkHandler<object>(new { Token = token },"User successfully Logged in")); //respponse ketika user berhasil login
+            return Ok(new ResponseOkHandler<object>(new { Token = token }, "User successfully Logged in")); //respponse ketika user berhasil login
         }
 
         //Logic untuk Get Accounts

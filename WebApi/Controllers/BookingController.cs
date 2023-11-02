@@ -9,7 +9,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class BookingController : ControllerBase
     {
         private readonly IBookingRepository _bookingRepository;
@@ -74,7 +74,7 @@ namespace WebApi.Controllers
 
             return Ok(new ResponseOkHandler<IEnumerable<BookingDetailDto>>(getAll, "Data retrieve Successfully")); //response untuk menampilkan data
         }
-        
+
         // mengambil data booking detail by guid
         [HttpGet("detail/{guid}")]
         public IActionResult GetDetailByGuid(Guid guid)
@@ -137,7 +137,7 @@ namespace WebApi.Controllers
                                 select new
                                 {
                                     ab.RoomGuid,
-                                    RoomName =  ar.Name,
+                                    RoomName = ar.Name,
                                     BookingLength = string.Concat(WorkingDaysHandler.CalculateWorkingDays(ab.StartDate, ab.EndDate), " days")
                                 };
             if (!bookingLength.Any())

@@ -136,3 +136,17 @@ body {
     color: #000 !important;
     background-color: #F85888 !important
 }
+
+/* Mengubah dropdown "Column visibility" menjadi vertikal */
+.dt-button-collection {
+    position: relative; /* Mengubah posisi dari absolute menjadi relative */
+}
+
+    .dt-button-collection div[role="menu"] {
+        display: flex; /* Mengatur menu sebagai flex container */
+        flex-direction: column; /* Mengubah tata letak menu menjadi vertikal */
+    }
+
+        .dt-button-collection div[role="menu"] button {
+            width: auto; /* Menyesuaikan lebar tombol */
+        }

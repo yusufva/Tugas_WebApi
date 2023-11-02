@@ -10,6 +10,11 @@ namespace WebApi.Utilities.Handler
         public string Message { get; set; }
         public Tentity? Data { get; set; }
 
+        public ResponseOkHandler()
+        {
+
+        }
+
         public ResponseOkHandler(Tentity? data, string message)
         {
             Code = StatusCodes.Status200OK;

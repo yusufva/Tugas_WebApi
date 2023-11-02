@@ -8,7 +8,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class EducationController : ControllerBase
     {
         private readonly IEducationRepository _educationRepository;
@@ -28,7 +28,7 @@ namespace WebApi.Controllers
                 return NotFound(new ResponseNotFoundHandler("Data not found"));
             }
 
-            var data = result.Select(x=>(EducationsDto)x);
+            var data = result.Select(x => (EducationsDto)x);
 
             return Ok(new ResponseOkHandler<IEnumerable<EducationsDto>>(data, "Data retrieve Successfully"));
         }

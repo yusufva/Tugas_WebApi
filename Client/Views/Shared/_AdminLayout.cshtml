@@ -19,9 +19,12 @@
     <link rel="stylesheet" href="~/skydash/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
     <link rel="stylesheet" href="~/skydash/vendors/ti-icons/css/themify-icons.css">
     <link rel="stylesheet" type="text/css" href="~/skydash/jsselect.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="~/skydash/css/vertical-layout-light/style.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="~/favicon.ico" />
 </head>
@@ -59,7 +62,7 @@
                                 <i class="ti-settings text-primary"></i>
                                 Settings
                             </a>
-                            <a class="dropdown-item">
+                            <a href="/logout" class="dropdown-item">
                                 <i class="ti-power-off text-primary"></i>
                                 Logout
                             </a>
@@ -151,14 +154,62 @@
                 <ul class="nav">
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Latihan" asp-action="Pokemon">
-                            <i class="icon-grid menu-icon"></i>
+                            <i class="icon-home menu-icon"></i>
                             <span class="menu-title">Pokemon List</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Latihan" asp-action="CRUD">
-                            <i class="icon-grid menu-icon"></i>
+                            <i class="icon-people menu-icon"></i>
                             <span class="menu-title">CRUD</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Account" asp-action="Index">
+                            <i class="icon-people menu-icon"></i>
+                            <span class="menu-title">Account</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="AccountRole" asp-action="Index">
+                            <i class="icon-people menu-icon"></i>
+                            <span class="menu-title">AccountRole</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Booking" asp-action="Index">
+                            <i class="icon-people menu-icon"></i>
+                            <span class="menu-title">Booking</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Education" asp-action="Index">
+                            <i class="icon-people menu-icon"></i>
+                            <span class="menu-title">Education</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Employee" asp-action="Index">
+                            <i class="icon-people menu-icon"></i>
+                            <span class="menu-title">Employee</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Role" asp-action="Index">
+                            <i class="icon-people menu-icon"></i>
+                            <span class="menu-title">Role</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Room" asp-action="Index">
+                            <i class="icon-people menu-icon"></i>
+                            <span class="menu-title">Room</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="University" asp-action="Index">
+                            <i class="icon-people menu-icon"></i>
+                            <span class="menu-title">University</span>
                         </a>
                     </li>
                 </ul>
@@ -192,10 +243,21 @@
     <script src="~/skydash/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="~/skydash/vendors/chart.js/Chart.min.js"></script>
     <script src="~/skydash/vendors/datatables.net/jquery.dataTables.js"></script>
     <script src="~/skydash/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
     <script src="~/skydash/jsdataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- End plugin js for this page -->
     <!-- inject:js -->

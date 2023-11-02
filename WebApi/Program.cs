@@ -82,7 +82,7 @@ builder.Services.AddCors(options =>
     {
         policy.AllowAnyOrigin();
         policy.AllowAnyHeader();
-        policy.WithMethods("GET", "POST", "DELETE", "PUT", "OPTIONS");
+        policy.AllowAnyMethod();
     });
 });
 
